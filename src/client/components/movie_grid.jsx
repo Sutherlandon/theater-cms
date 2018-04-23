@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react';
 
 function Movie(props) {
   return (
@@ -85,8 +84,3 @@ class MovieGrid extends React.Component {
     );
   }
 }
-
-ReactDOM.render(
-  <MovieGrid />,
-  document.getElementById("root")
-);
