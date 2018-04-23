@@ -1,0 +1,115 @@
+@content-width: 970px;
+
+#page-content {
+  margin: 0 auto;
+  max-width: @content-width;
+}
+
+#date-viewer {
+  text-align: center;
+  margin-bottom: 1em;
+
+  h1 {
+    display: inline;
+  }
+
+  form {
+    display: inline;
+
+    select {
+      margin-top: -12px;
+    }
+  }
+}
+
+#date-selector {
+  form {
+    height: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+
+    select {
+      height: 3.1em;
+      width: 100%;
+      position: relative;
+      top: -3.1em;
+      opacity: 0;
+    }
+  }
+}
+
+#movie-grid {
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 1em;
+
+  .rating {
+    min-width: 3em;
+  }
+}
+
+#ticket-info {
+  display: grid;
+  grid-column-gap: 2em;
+  grid-row-gap: 1em;
+  padding: 1em;
+  grid-template-areas: "title title"
+                       "desc desc"
+                       "2D 3D";
+
+  .info-title { grid-area: title; }
+  .info-desc { grid-area: desc; }
+  #2D { grid-area: 2D; }
+  #3D { grid-area: 3D; }
+
+  p {
+    margin: 0;
+  }
+}
+
+#theater-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2em;
+  grid-row-gap: 1em;
+  padding: 0 2em 2em 2em;
+
+  .section-title {
+    color: black;
+    font-weight: 500;
+  }
+}
+
+#footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 2em;
+  grid-row-gap: 1em;
+  padding: 0 2em 2em 2em;
+}
+
+.info-title {
+  text-align: center;
+}
+
+@media (max-width: 625px) {
+  #date-viewer h1 {
+    display: block;
+  }
+
+  #movie-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #ticket-info {
+    grid-template-areas: "title"
+                         "desc"
+                         "2D"
+                         "3D";
+  }
+
+  #theater-info {
+    grid-template-columns: 1fr;
+  }
+}

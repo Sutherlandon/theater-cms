@@ -1,0 +1,54 @@
+.title-1 {
+  font-size: 1.5em;
+  font-weight: 900;
+}
+.title-2 {
+  font-size: 1.5em;
+  font-weight: 100;
+}
+.pure-table td {
+  text-align: center;
+}
+.pure-u-md-1-7 {
+  width: 14.2857%;
+}
+.sm-date-menu {
+  margin-bottom: 2em;
+  text-align: center;
+}
+.sm-date-menu select {
+  width: 90%
+}
+.date-selector {
+  border-right: 1px solid #fbfbfb;
+  box-sizing: border-box;
+}
+.date-selector a {
+  text-decoration: none;
+  color: white;
+}
+.ds-last {
+  border-right: 0px;
+}
+.ds-selected {
+  background: black;
+}
+.ds-arrow-container {
+  margin-bottom: 2em;
+}
+#reald3d-logo {
+  background-image: url(/img/reald3d.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: 50%;
+}
+.movie-table {
+  width: 100%;
+}
+.movie-poster {
+  padding: 0 !important;
+}
+.movie-poster img {
+  display: block;
+  width: 100%;
+}
