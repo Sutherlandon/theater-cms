@@ -12,7 +12,7 @@ var express = require('express'),
 var app = express();
 
 // serves public files like html, css, js, and img
-app.use(express.static(path.join(__dirname, '/public')));
+app.use(express.static(path.join(__dirname, './../../dist/')));
 
 // gets movie meta-data based on title from the imbd-api
 app.get('/movie/:title', function (req, res) {
@@ -33,7 +33,7 @@ app.get('/movie/:title/:year', function (req, res) {
   });
 });
 
-// fires up the server to listen on port 3001
-app.listen(3001, function () {
-  console.log('Theater-CMS running (port: 3001)');
+// fires up the server to listen on port 3000
+app.listen(3000, function () {
+  console.log('Theater-CMS running (port: 3000)');
 });
