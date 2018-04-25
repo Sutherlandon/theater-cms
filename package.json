@@ -14,19 +14,21 @@
     "less": "^3.0.2",
     "less-loader": "^4.1.0",
     "nodemon": "^1.17.3",
-    "parcel-bundler": "^1.7.1",
     "path": "^0.12.7",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "react-scripts": "1.1.4",
+    "react-scripts": "^1.1.4",
     "style-loader": "^0.21.0"
   },
   "scripts": {
-    "start": "nodemon src/server/index.js",
+    "start": "nodemon src/server.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "webpack": "./node_modules/.bin/webpack -w",
-    "parcel": "./node_modules/parcel-bundler/bin/cli.js watch index.html"
+    "parcel": "parcel public/index.html"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.7.1"
   }
 }

@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React from 'react';
+import ReactDOM from 'react-dom';
 
 function Movie(props) {
   return (
@@ -67,9 +68,10 @@ class MovieGrid extends React.Component {
     }];
   }
 
-  renderMovie(movie) {
+  renderMovie(movie, i) {
     return (
       <Movie
+        key={i}
         name={movie.name}
         poster={movie.poster}
         rating={movie.rating}
@@ -80,7 +82,14 @@ class MovieGrid extends React.Component {
 
   render(props) {
     return (
-      this.movies.map((movie) => this.renderMovie(movie))
+      <div id="movie-grid">
+        {this.movies.map((movie, i) => this.renderMovie(movie, i))}
+      </div>
     );
   }
 }
+
+ReactDOM.render(
+  <MovieGrid />,
+  document.getElementById("root")
+);
