@@ -3,24 +3,22 @@ import ReactDOM from 'react-dom';
 
 function Movie(props) {
   return (
-    <div className="movie-contianer" key={props.key}>
-      <table className="pure-table pure-table-borderd pure-table-striped movie-table">
-        <tbody>
-          <tr>
-            <td colSpan="2" className="movie-poster">
-              <img src={props.poster} alt={props.name}/>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan="2">{props.name}</td>
-          </tr>
-          <tr>
-            <td className="rating">{props.rating}</td>
-            <td>{props.runtime}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <table className="pure-table pure-table-borderd pure-table-striped movie-table">
+      <tbody>
+        <tr>
+          <td colSpan="2" className="movie-poster">
+            <img src={props.poster} alt={props.name}/>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan="2">{props.name}</td>
+        </tr>
+        <tr>
+          <td className="rating">{props.rating}</td>
+          <td>{props.runtime}</td>
+        </tr>
+      </tbody>
+    </table>
   );
 }
 
@@ -68,22 +66,22 @@ class MovieGrid extends React.Component {
     }];
   }
 
-  renderMovie(movie, i) {
-    return (
-      <Movie
-        key={i}
-        name={movie.name}
-        poster={movie.poster}
-        rating={movie.rating}
-        runtime={movie.runtime}
-      />
-    );
-  }
 
   render(props) {
     return (
-      <div id="movie-grid">
-        {this.movies.map((movie, i) => this.renderMovie(movie, i))}
+      <div class="movie-grid">
+        {this.movies.map((movie, i) => {
+          return (
+            <div className="movie-contianer" key={i}>
+              <Movie
+                name={movie.name}
+                poster={movie.poster}
+                rating={movie.rating}
+                runtime={movie.runtime}
+              />
+            </div>
+          );
+        })}
       </div>
     );
   }
