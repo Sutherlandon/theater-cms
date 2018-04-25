@@ -39,13 +39,78 @@
 }
 
 .movie-grid {
-  display: grid;
-  grid-gap: 1em;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  display: flex;
+  flex-wrap: nowrap;
   padding: 1em;
 
-  .rating {
-    min-width: 3em;
+  .movie-card {
+    border: 1px solid #DDD;
+    border-radius: 10px;
+    margin-right: 1em;
+    max-width: 20em;
+    min-width: 20em;
+    flex: 1;
+    text-align: center;
+
+    .poster {
+      img {
+        border-radius: 10px;
+        display: block;
+        width: 100%;
+      }
+    }
+
+    .info {
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+
+      /* these colors taken from bootstrap buttons */
+      .G {
+        color: white;
+        background-color: #5cb85c;
+        border-color: #4cae4c;
+      }
+
+      .PG {
+        color: white;
+        background-color: #5bc0de;
+        border-color: #46b8da;
+      }
+
+      .PG-13 {
+        color: white;
+        background-color: #f0ad4e;
+        border-color: #eea236;
+      }
+
+      .R {
+        color: white;
+        background-color: #d9534f;
+        border-color: #d43f3a;
+      }
+    }
+
+    .showtimes {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 10px;
+
+      span {
+        color: white;
+        background-color: #337ab7;
+        border-color: #2e6da4;
+        margin-bottom: 5px;
+      }
+    }
+
+    span {
+      border-radius: 5px;
+      border: 1px solid #DDD;
+      min-width: 5em;
+      padding: 5px;
+    }
   }
 }
 
