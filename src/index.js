@@ -1,13 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+function Header(props) {
+  return (
+    <header>
+      <img src={props.background} alt="reeldeal theater"/>
+      <div class="gradient-overlay"></div>
+    </header>
+  )
+}
+
 function MovieCard(props) {
+  const rating_class = "rating " + props.rating;
   const showtimes = props.showtimes.map((time, i) => {
     return (
       <span key={i}>{time}</span>
     )
   });
-  const rating_class = "rating " + props.rating;
 
   return (
     <div class="movie-card">
@@ -21,26 +30,6 @@ function MovieCard(props) {
       <div class="showtimes">{showtimes}</div>
     </div>
   )
-  /*
-  return (
-    <table className="pure-table pure-table-borderd pure-table-striped movie-table">
-      <tbody>
-        <tr>
-          <td colSpan="2" className="movie-poster">
-            <img src={props.poster} alt={props.name}/>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan="2">{props.name}</td>
-        </tr>
-        <tr>
-          <td className="rating">{props.rating}</td>
-          <td>{props.runtime}</td>
-        </tr>
-      </tbody>
-    </table>
-  );
-  */
 }
 
 class MovieGrid extends React.Component {
@@ -49,7 +38,7 @@ class MovieGrid extends React.Component {
     this.movies = [{
       "name" : "Star Wars: Rogue One",
       "poster": "img/star_wars.jpg",
-      "rating" : "PG-13",
+      "rating" : "G",
       "runtime" : "2h 13m",
       "showtimes" : {
         "Friday 1/06" : [
@@ -68,7 +57,7 @@ class MovieGrid extends React.Component {
     }, {
       "name" : "Assasins Creed",
       "poster": "img/assassins_creed.jpg",
-      "rating" : "R",
+      "rating" : "PG",
       "runtime" : "2h 20m",
       "showtimes" : {
         "Friday 1/06" : [
@@ -147,7 +136,16 @@ class MovieGrid extends React.Component {
   }
 }
 
+function App(props) {
+  return (
+    <div id='app'>
+      <Header background='img/IMG_7137.jpg'/>
+      <MovieGrid/>
+    </div>
+  )
+}
+
 ReactDOM.render(
-  <MovieGrid />,
+  <App />,
   document.getElementById("root")
 );
