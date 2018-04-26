@@ -10,7 +10,22 @@ function Header(props) {
           'backgroundImage': 'url(' + props.background + ')'
         }}
       />
+      <nav>
+        <h1>Reel Deal Theater</h1>
+      </nav>
     </header>
+  )
+}
+
+function NowShowingSelector(props) {
+  return (
+    <div className="">
+      <label htmlFor="now_showing">Now Showing</label>
+      <select id="now_showing">
+        <option value="Friday 1/06">Friday 1/06</option>
+        <option value="Saturday 1/07">Saturday 1/07</option>
+      </select>
+    </div>
   )
 }
 
@@ -84,7 +99,6 @@ class MovieGrid extends React.Component {
       "runtime" : "2h 13m",
       "showtimes" : {
         "Friday 1/06" : [
-          "12:45 2D",
           "3:45 2D",
           "6:45 3D",
           "9:45 3D"
@@ -118,7 +132,6 @@ class MovieGrid extends React.Component {
     }];
   }
 
-
   render(props) {
     return (
       <div className="movie-grid">
@@ -141,10 +154,11 @@ class MovieGrid extends React.Component {
 
 function App(props) {
   return (
-    <div id='app'>
+    <React.Fragment>
       <Header background='img/IMG_7137.jpg'/>
+      <NowShowingSelector/>
       <MovieGrid/>
-    </div>
+    </React.Fragment>
   )
 }
 

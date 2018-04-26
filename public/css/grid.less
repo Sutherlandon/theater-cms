@@ -1,6 +1,6 @@
 @content-width: 970px;
 
-body, #root, #app {
+html, body, #root {
   height: 100%;
 }
 
@@ -9,56 +9,44 @@ body {
 }
 
 header {
+  height: 50%;
 
   .gradient-overlay {
     background-position: top center;
     background-size: cover;
-    height: 500px;
+    height: 100%;
 
     &::before{
-      background-image: linear-gradient(rgba(173, 15, 244, 80%), rgb(173, 15, 244, 100));
+      background-image: linear-gradient(to bottom right, rgba(61, 15, 244, 80%), rgb(173, 15, 244, 100));
       content: '';
       display: block;
-      height: 500px;
+      height: 100%;
     }
   }
 
-}
+  nav {
+    position: absolute;
+    top: 0;
 
-#page-content {
-  margin: 0 auto;
-  max-width: @content-width;
-}
-
-#date-viewer {
-  text-align: center;
-  margin-bottom: 1em;
-
-  h1 {
-    display: inline;
-  }
-
-  form {
-    display: inline;
-
-    select {
-      margin-top: -12px;
-    }
-  }
-}
-
-#date-selector {
-  form {
-    height: 0;
-    padding-left: 1em;
-    padding-right: 1em;
-
-    select {
-      height: 3.1em;
+    @media(max-width: 375px) {
       width: 100%;
-      position: relative;
-      top: -3.1em;
-      opacity: 0;
+      text-align: center;
+    }
+
+    h1 {
+      color: #f5f5f5;
+      font-size: 2.5em;
+      margin: 0.67em;
+
+      @media(max-width: 700px) {
+        font-size: 2em;
+      }
+
+      @media(max-width: 375px) {
+        font-size: 2em;
+        margin: 0.67em 0;
+        width: 100%;
+      }
     }
   }
 }
@@ -67,8 +55,7 @@ header {
   display: flex;
   flex-wrap: nowrap;
   padding: 0.5em;
-  margin-top: -250px;
-  overflow-x: scroll;
+
 
   .movie-card {
     background-color: #f5f5f5;
@@ -141,6 +128,46 @@ header {
       border: 1px solid #DDD;
       min-width: 5em;
       padding: 5px;
+    }
+  }
+}
+
+
+/* before react styles */
+#page-content {
+  margin: 0 auto;
+  max-width: @content-width;
+}
+
+#date-viewer {
+  text-align: center;
+  margin-bottom: 1em;
+
+  h1 {
+    display: inline;
+  }
+
+  form {
+    display: inline;
+
+    select {
+      margin-top: -12px;
+    }
+  }
+}
+
+#date-selector {
+  form {
+    height: 0;
+    padding-left: 1em;
+    padding-right: 1em;
+
+    select {
+      height: 3.1em;
+      width: 100%;
+      position: relative;
+      top: -3.1em;
+      opacity: 0;
     }
   }
 }
