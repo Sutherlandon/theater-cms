@@ -4,8 +4,12 @@ import ReactDOM from 'react-dom';
 function Header(props) {
   return (
     <header>
-      <img src={props.background} alt="reeldeal theater"/>
-      <div class="gradient-overlay"></div>
+      <div
+        className="gradient-overlay"
+        style={{
+          'backgroundImage': 'url(' + props.background + ')'
+        }}
+      />
     </header>
   )
 }
@@ -19,15 +23,15 @@ function MovieCard(props) {
   });
 
   return (
-    <div class="movie-card">
-      <div class="poster">
+    <div className="movie-card">
+      <div className="poster">
         <img src={props.poster} alt={props.name}/>
       </div>
-      <div class="info">
-        <span class={rating_class}>{props.rating}</span>
-        <span class="runtime">{props.runtime}</span>
+      <div className="info">
+        <span className={rating_class}>{props.rating}</span>
+        <span className="runtime">{props.runtime}</span>
       </div>
-      <div class="showtimes">{showtimes}</div>
+      <div className="showtimes">{showtimes}</div>
     </div>
   )
 }
@@ -37,7 +41,7 @@ class MovieGrid extends React.Component {
     super(props);
     this.movies = [{
       "name" : "Star Wars: Rogue One",
-      "poster": "img/star_wars.jpg",
+      "poster": "img/sing.jpg",
       "rating" : "G",
       "runtime" : "2h 13m",
       "showtimes" : {
@@ -56,7 +60,7 @@ class MovieGrid extends React.Component {
       }
     }, {
       "name" : "Assasins Creed",
-      "poster": "img/assassins_creed.jpg",
+      "poster": "img/passengers.jpg",
       "rating" : "PG",
       "runtime" : "2h 20m",
       "showtimes" : {
@@ -117,18 +121,17 @@ class MovieGrid extends React.Component {
 
   render(props) {
     return (
-      <div class="movie-grid">
+      <div className="movie-grid">
         {this.movies.map((movie, i) => {
           return (
-            <div className="movie-contianer" key={i}>
-              <MovieCard
-                name={movie.name}
-                poster={movie.poster}
-                rating={movie.rating}
-                runtime={movie.runtime}
-                showtimes={movie.showtimes["Friday 1/06"]}
-              />
-            </div>
+            <MovieCard
+              key={i}
+              name={movie.name}
+              poster={movie.poster}
+              rating={movie.rating}
+              runtime={movie.runtime}
+              showtimes={movie.showtimes["Friday 1/06"]}
+            />
           );
         })}
       </div>
