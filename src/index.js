@@ -1,33 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+function NowShowingSelector(props) {
+  return (
+    <div className="now-showing-selector">
+      <form className="pure-form pure-form-aligned">
+        <label htmlFor="now-showing">Now Showing</label>
+        <select id="now-showing" className="pure-input">
+          <option value="Friday 1/06">Friday 1/06</option>
+          <option value="Saturday 1/07">Saturday 1/07</option>
+        </select>
+      </form>
+    </div>
+  )
+}
+
+/**
+ *
+ */
 function Header(props) {
   return (
     <header>
-      <div
-        className="gradient-overlay"
-        style={{
-          'backgroundImage': 'url(' + props.background + ')'
-        }}
-      />
-      <nav>
+      <nav className="gradient-overlay">
         <h1>Reel Deal Theater</h1>
+        <NowShowingSelector/>
       </nav>
     </header>
   )
 }
 
-function NowShowingSelector(props) {
+/*
+function Nav(props) {
   return (
-    <div className="">
-      <label htmlFor="now_showing">Now Showing</label>
-      <select id="now_showing">
-        <option value="Friday 1/06">Friday 1/06</option>
-        <option value="Saturday 1/07">Saturday 1/07</option>
-      </select>
-    </div>
+    <nav>
+      <h1>Reel Deal Theater</h1>
+      <NowShowingSelector/>
+    </nav>
   )
 }
+*/
 
 function MovieCard(props) {
   const rating_class = "rating " + props.rating;
@@ -51,7 +62,26 @@ function MovieCard(props) {
   )
 }
 
-class MovieGrid extends React.Component {
+function MovieGrid(props) {
+  return (
+    <div className="movie-grid">
+      {props.movies.map((movie, i) => {
+        return (
+          <MovieCard
+            key={i}
+            name={movie.name}
+            poster={movie.poster}
+            rating={movie.rating}
+            runtime={movie.runtime}
+            showtimes={movie.showtimes["Friday 1/06"]}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.movies = [{
@@ -111,6 +141,24 @@ class MovieGrid extends React.Component {
         ]
       }
     }, {
+      "name" : "Star Wars: Rogue One",
+      "poster": "img/star_wars.jpg",
+      "rating" : "PG-13",
+      "runtime" : "2h 13m",
+      "showtimes" : {
+        "Friday 1/06" : [
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
+        ],
+        "Saturday 1/07" : [
+          "12:45 2D",
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
+        ]
+      }
+    }, {
       "name" : "Assasins Creed",
       "poster": "img/assassins_creed.jpg",
       "rating" : "R",
@@ -134,32 +182,19 @@ class MovieGrid extends React.Component {
 
   render(props) {
     return (
-      <div className="movie-grid">
-        {this.movies.map((movie, i) => {
-          return (
-            <MovieCard
-              key={i}
-              name={movie.name}
-              poster={movie.poster}
-              rating={movie.rating}
-              runtime={movie.runtime}
-              showtimes={movie.showtimes["Friday 1/06"]}
-            />
-          );
-        })}
-      </div>
+      <React.Fragment>
+        <Header
+          gradient="linear-gradient(to bottom, rgba(61, 15, 244, 80%), rgb(173, 15, 244, 100))"
+          background='img/IMG_7137.jpg'
+        />
+        <div className="content-wrap">
+          <MovieGrid
+            movies={this.movies}
+          />
+        </div>
+      </React.Fragment>
     );
   }
-}
-
-function App(props) {
-  return (
-    <React.Fragment>
-      <Header background='img/IMG_7137.jpg'/>
-      <NowShowingSelector/>
-      <MovieGrid/>
-    </React.Fragment>
-  )
 }
 
 ReactDOM.render(
