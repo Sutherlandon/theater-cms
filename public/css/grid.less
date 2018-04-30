@@ -40,10 +40,10 @@ header {
 
 .now-showing-selector {
   font-size: 1.5em;
+  margin: -9em auto 2em;
   text-align: center;
 
   @media(max-width: 24em) {
-    margin-top: 3em;
     font-size: 1.25em;
   }
 
@@ -67,15 +67,16 @@ header {
 
 .movie-grid {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   padding: 0.5em;
-  margin: -5em auto 3em;
   max-width: @max-content-width;
+  margin: 0 auto 2em;
 
   @media(max-width: 24em) {
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
+    flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
   }
 
