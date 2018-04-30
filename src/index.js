@@ -183,8 +183,6 @@ class MovieGrid extends React.Component {
   }
 
   handleShowtimes(selected_date) {
-    console.log(this);
-    console.log(selected_date);
     this.setState({
       current_date: selected_date
     });
