@@ -141,24 +141,6 @@ class App extends React.Component {
         ]
       }
     }, {
-      "name" : "Star Wars: Rogue One",
-      "poster": "img/star_wars.jpg",
-      "rating" : "PG-13",
-      "runtime" : "2h 13m",
-      "showtimes" : {
-        "Friday 1/06" : [
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ],
-        "Saturday 1/07" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ]
-      }
-    }, {
       "name" : "Assasins Creed",
       "poster": "img/assassins_creed.jpg",
       "rating" : "R",
