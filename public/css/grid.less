@@ -1,31 +1,38 @@
+/* widths */
 @max-content-width: 80em;
-
 @sm-screen: 35.5em;
 @md-screen: 48em;
 @lg-screen: 64em;
 @xl-screen: 80em;
+
+/* colors */
+@primary-dark: #1f1f1f;
+@primary-light: #f5f5f5;
+
+@grad-blue: rgba(61, 15, 244, 100%);
+@grad-purple: rgb(173, 15, 244, 100%) ;
 
 html, body, #root {
   height: 100%;
 }
 
 body {
-  background-color: #1f1f1f;
+  background-color: @primary-dark;
 }
 
 header {
   height: 20em;
 
   .gradient-overlay {
-    background-image: linear-gradient(to bottom, rgba(61, 15, 244, 80%), rgb(173, 15, 244, 100));
-    background-image: linear-gradient(to bottom, rgba(61, 15, 244, 80%), rgb(173, 15, 244, 100)), url('../img/IMG_7137.jpg');
+    background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple);
+    background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple), url('../img/IMG_7137.jpg');
     background-position: top center;
     background-size: cover;
     height: 100%;
     padding-top: 0.001em;
 
     h1 {
-      color: #f5f5f5;
+      color: @primary-light;
       font-size: 2.5em;
       padding-left: 0.67em;
 
@@ -49,7 +56,7 @@ header {
 
   label {
     font-size: 1.5em;
-    color: #f5f5f5;
+    color: @primary-light;
     display: inline-block;
     margin-right: 0.5em;
     vertical-align: middle;
@@ -68,9 +75,10 @@ header {
 .movie-grid {
   display: flex;
   flex-wrap: wrap;
-  padding: 0.5em;
+  padding: 0.5em 0.5em 2em;
   max-width: @max-content-width;
-  margin: 0 auto 2em;
+  margin-left: auto;
+  margin-right: auto;
 
   @media(max-width: 24em) {
     overflow-x: auto;
@@ -82,7 +90,7 @@ header {
 
 
   .movie-card {
-    background-color: #f5f5f5;
+    background-color: @primary-light;
     border: 1px solid #DDD;
     border-radius: 10px;
     margin: 0.5em;
@@ -156,91 +164,101 @@ header {
   }
 }
 
-
-/* before react styles */
-
-#date-viewer {
+.info-title {
+  color: @primary-light;
+  background-image: linear-gradient(to bottom, @grad-blue, @grad-purple);
+  border-radius: 5px;
+  margin: -1em auto 0;
+  padding: 0.5em;
   text-align: center;
-  margin-bottom: 1em;
-
-  h1 {
-    display: inline;
-  }
-
-  form {
-    display: inline;
-
-    select {
-      margin-top: -12px;
-    }
-  }
 }
 
-#date-selector {
-  form {
-    height: 0;
-    padding-left: 1em;
-    padding-right: 1em;
-
-    select {
-      height: 3.1em;
-      width: 100%;
-      position: relative;
-      top: -3.1em;
-      opacity: 0;
-    }
-  }
-}
-
-#ticket-info {
+.ticket-info {
+  background-color: @primary-light;
   display: grid;
   grid-column-gap: 2em;
   grid-row-gap: 1em;
-  padding: 1em;
+  padding: 1em 1em 3em;
   grid-template-areas: "title title"
                        "desc desc"
                        "2D 3D";
 
+  @media(max-width: 24em) {
+    grid-template-areas: "title"
+                         "desc"
+                         "2D"
+                         "3D";
+    .D2 { margin: auto; }
+    .D3 { margin: auto; }
+  }
+
   .info-title { grid-area: title; }
   .info-desc { grid-area: desc; }
-  #2D { grid-area: 2D; }
-  #3D { grid-area: 3D; }
+
+  .D2 {
+    grid-area: 2D;
+    margin-left: auto;
+  }
+
+  .D3 {
+    grid-area: 3D;
+    margin-right: auto;
+  }
 
   p {
     margin: 0;
   }
 }
 
-#theater-info {
+.theater-info {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 2em;
   grid-row-gap: 1em;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: @max-content-width;
   padding: 0 2em 2em 2em;
+  color: #DDD;
+
+  @media(max-width: 24em) {
+    grid-template-columns: 1fr;
+  }
 
   .section-title {
-    color: black;
-    font-weight: 500;
+    grid-column: 1/span 2;
   }
 }
 
-#footer {
+.footer {
+  color: #DDD;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 2em;
   grid-row-gap: 1em;
+  margin: auto;
+  max-width: @max-content-width;
   padding: 0 2em 2em 2em;
-}
 
-.info-title {
-  text-align: center;
+  @media(max-width: 24em) {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-info {
+    grid-column: 1;
+
+    table {
+      background-color: @primary-light;
+      color: @primary-dark;
+    }
+  }
+
+  .location a {
+    color: @primary-light;
+  }
 }
 
 @media (max-width: 625px) {
-  #date-viewer h1 {
-    display: block;
-  }
-
   #movie-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -252,9 +270,6 @@ header {
                          "3D";
   }
 
-  #theater-info {
-    grid-template-columns: 1fr;
-  }
 }
 
 /* inherited from reeldeal.css */
@@ -297,22 +312,10 @@ header {
 .ds-arrow-container {
   margin-bottom: 2em;
 }
+
 #reald3d-logo {
   background-image: url(../img/reald3d.png);
   background-size: contain;
   background-repeat: no-repeat;
   background-position: 50%;
-}
-.movie-contianer {
-
-}
-.movie-table {
-  width: 100%;
-}
-.movie-poster {
-  padding: 0 !important;
-}
-.movie-poster img {
-  display: block;
-  width: 100%;
 }
