@@ -225,8 +225,12 @@ header {
     grid-template-columns: 1fr;
   }
 
-  .section-title {
+  .info-title {
     grid-column: 1/span 2;
+
+    @media(max-width: 24em) {
+      grid-column: 1;
+    }
   }
 }
 
