@@ -1,19 +1,37 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-function NowShowingSelector(props) {
-  return (
-    <div className="now-showing-selector">
-      <form className="pure-form pure-form-aligned">
-        <label htmlFor="now-showing">Now Showing</label>
-        <select id="now-showing" className="pure-input">
-          <option value="Friday 1/06">Friday 1/06</option>
-          <option value="Saturday 1/07">Saturday 1/07</option>
-        </select>
-      </form>
-    </div>
-  )
+class NowShowingSelector extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: 'Friday 1/06'
+    }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.propsOnChange = props.onChange;
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+    this.propsOnChange(event.target.value)
+  }
+
+  render(props) {
+    return (
+      <div className="now-showing-selector">
+        <form className="pure-form pure-form-aligned">
+          <label htmlFor="now-showing-date">Now Showing</label>
+          <select id="now-showing-date" onChange={this.handleChange} value={this.state.value} className="pure-input">
+            <option value="Friday 1/06">Friday 1/06</option>
+            <option value="Saturday 1/07">Saturday 1/07</option>
+          </select>
+        </form>
+      </div>
+    )
+  }
 }
+
 
 /**
  *
@@ -23,7 +41,6 @@ function Header(props) {
     <header>
       <nav className="gradient-overlay">
         <h1>Reel Deal Theater</h1>
-        <NowShowingSelector/>
       </nav>
     </header>
   )
@@ -62,28 +79,13 @@ function MovieCard(props) {
   )
 }
 
-function MovieGrid(props) {
-  return (
-    <div className="movie-grid">
-      {props.movies.map((movie, i) => {
-        return (
-          <MovieCard
-            key={i}
-            name={movie.name}
-            poster={movie.poster}
-            rating={movie.rating}
-            runtime={movie.runtime}
-            showtimes={movie.showtimes["Friday 1/06"]}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
-class App extends React.Component {
+class MovieGrid extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      current_date: "Friday 1/06",
+    };
+
     this.movies = [{
       "name" : "Star Wars: Rogue One",
       "poster": "img/sing.jpg",
@@ -116,10 +118,10 @@ class App extends React.Component {
           "9:40 3D"
         ],
         "Saturday 1/07" : [
-          "1:00 2D",
-          "4:00 2D",
-          "7:00 3D",
-          "9:40 3D"
+          "12:45 2D",
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
         ]
       }
     }, {
@@ -134,13 +136,34 @@ class App extends React.Component {
           "9:45 3D"
         ],
         "Saturday 1/07" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
+          "1:00 2D",
+          "4:00 2D",
+          "7:00 3D",
+          "9:40 3D"
         ]
       }
     }, {
+<<<<<<< HEAD
+=======
+      "name" : "Star Wars: Rogue One",
+      "poster": "img/star_wars.jpg",
+      "rating" : "PG-13",
+      "runtime" : "2h 13m",
+      "showtimes" : {
+        "Friday 1/06" : [
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
+        ],
+        "Saturday 1/07" : [
+          "1:00 2D",
+          "4:00 2D",
+          "7:00 3D",
+          "9:40 3D"
+        ]
+      }
+    }, {
+>>>>>>> 8008ca888d0d4570d1d85dda95b220edbec5855d
       "name" : "Assasins Creed",
       "poster": "img/assassins_creed.jpg",
       "rating" : "R",
@@ -153,15 +176,47 @@ class App extends React.Component {
           "9:40 3D"
         ],
         "Saturday 1/07" : [
-          "1:00 2D",
-          "4:00 2D",
-          "7:00 3D",
-          "9:40 3D"
+          "12:45 2D",
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
         ]
       }
     }];
   }
 
+  handleShowtimes(selected_date) {
+    this.setState({
+      current_date: selected_date
+    });
+  }
+
+  render(props) {
+    return (
+      <React.Fragment>
+        <NowShowingSelector
+          onChange={(date) => this.handleShowtimes(date)}
+        />
+        <div className="movie-grid">
+          {this.movies.map((movie, i) => {
+            return (
+              <MovieCard
+                key={i}
+                name={movie.name}
+                poster={movie.poster}
+                rating={movie.rating}
+                runtime={movie.runtime}
+                showtimes={movie.showtimes[this.state.current_date]}
+              />
+            );
+          })}
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+class App extends React.Component {
   render(props) {
     return (
       <React.Fragment>
@@ -170,9 +225,7 @@ class App extends React.Component {
           background='img/IMG_7137.jpg'
         />
         <div className="content-wrap">
-          <MovieGrid
-            movies={this.movies}
-          />
+          <MovieGrid/>
         </div>
       </React.Fragment>
     );
