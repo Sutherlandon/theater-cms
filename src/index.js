@@ -141,7 +141,8 @@ class MovieGrid extends React.Component {
           "1:00 2D",
           "4:00 2D",
           "7:00 3D",
-          "9:40 3D"
+          "9:40 3D",
+          "12:00 3D"
         ],
         "Saturday 1/07" : [
           "12:45 2D",
@@ -165,7 +166,7 @@ class MovieGrid extends React.Component {
         <NowShowingSelector
           onChange={(date) => this.handleShowtimes(date)}
         />
-        <div className="movie-grid section">
+        <div className="movie-grid">
           {this.movies.map((movie, i) => {
             return (
               <MovieCard
