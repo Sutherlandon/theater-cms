@@ -5,28 +5,40 @@ class NowShowingSelector extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 'Friday 1/06'
+      value: 'Friday 1/06',
+      open: false
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.propsOnChange = props.onChange;
   }
 
-  handleChange(event) {
-    this.setState({value: event.target.value});
-    this.propsOnChange(event.target.value)
+  handleChange(new_value) {
+    this.setState({
+      value: new_value,
+      open: false
+    });
+    this.propsOnChange(new_value)
   }
 
   render(props) {
+    const select_id = "now-showing"; // must be unique to the app
+    const display = this.state.open ? "block" : "none";
+
     return (
-      <div className="now-showing-selector">
-        <form className="pure-form pure-form-aligned">
-          <label htmlFor="now-showing-date">Now Showing</label>
-          <select id="now-showing-date" onChange={this.handleChange} value={this.state.value} className="pure-input">
-            <option value="Friday 1/06">Friday 1/06</option>
-            <option value="Saturday 1/07">Saturday 1/07</option>
-          </select>
-        </form>
+      <div className="select-input">
+        <label htmlFor={select_id + "-select"} className="select-label">Now Showing</label>
+        <div className="select-wrapper">
+          <button id={select_id + "-select"} className="select-button"
+            onClick={() => this.setState({open: !this.state.open})}>
+            {this.state.value}
+            <span className="caret"></span>
+          </button>
+          <ul className="select-options" style={{display: display}}>
+            <li onClick={() => this.handleChange("Friday 1/06")}>Friday 1/06</li>
+            <li onClick={() => this.handleChange("Saturday 1/07")}>Saturday 1/07</li>
+          </ul>
+        </div>
       </div>
     )
   }

@@ -45,6 +45,68 @@ header {
   }
 }
 
+.select-input {
+  font-size: 1.5em;
+  margin: -9em auto 2em;
+  text-align: center;
+
+  @media(max-width: 24em) {
+    font-size: 1.25em;
+  }
+
+  .select-label {
+    font-size: 1.5em;
+    color: @primary-light;
+    display: inline-block;
+    margin-right: 0.5em;
+    vertical-align: middle;
+
+    @media(max-width: 24em) {
+      font-size: 1.25em;
+    }
+  }
+
+  .select-wrapper {
+    display: inline-block;
+
+    .select-button {
+      background-color: rgba(3,3,3,40%);
+      border: 1px solid @primary-light;
+      border-radius: 5px;
+      color: @primary-light;
+      font-size: 1.25em;
+      padding: 0.5em;
+      width: 100%;
+
+      .caret {
+        border-width: 6px;
+      }
+    }
+
+    .select-options {
+      background-color: @primary-light;
+      border: 1px solid @primary-dark;
+      border-radius: 5px;
+      display: none;
+      height: auto;
+      list-style-type: none;
+      margin: 0;
+      max-height: 200px;
+      overflow-x: hidden;
+      padding: 0;
+      position: absolute;
+      text-align: left;
+      z-index: 1000;
+
+      li {
+        cursor: pointer;
+        padding: 0.25em;
+      }
+    }
+  }
+}
+
+/*
 .now-showing-selector {
   font-size: 1.5em;
   margin: -9em auto 2em;
@@ -66,6 +128,7 @@ header {
     }
   }
 }
+*/
 
 .content-wrap {
   margin: 0 auto;
@@ -275,6 +338,17 @@ header {
                          "3D";
   }
 
+}
+
+.caret {
+  border-top: 4px solid;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  display: inline-block;
+  height: 0;
+  margin-left: 20px;
+  width: 0;
+  vertical-align: middle;
 }
 
 /* inherited from reeldeal.css */
