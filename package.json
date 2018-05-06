@@ -25,12 +25,13 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    
+
     "server": "nodemon src/server.js",
     "webpack": "./node_modules/.bin/webpack -w",
     "parcel": "parcel public/index.html"
   },
   "devDependencies": {
     "parcel-bundler": "^1.7.1"
-  }
+  },
+  "homepage": "./"
 }
