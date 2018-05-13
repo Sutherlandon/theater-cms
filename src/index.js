@@ -217,10 +217,23 @@ class MovieGrid extends React.Component {
   }
 }
 
+function SectionTitle(props) {
+  return (
+    <h1 className="info-title"
+      onClick={(e) =>
+        e.target.scrollIntoView(true, {
+          behavior: "smooth"
+        })
+      }>
+      {props.text}
+    </h1>
+  )
+}
+
 function TicketInfo(props) {
   return (
     <div className="ticket-info">
-      <h1 className="info-title">Ticket Information</h1>
+      <SectionTitle text="Ticket Information" />
       <div className="info-desc" style={{maxWidth: '550px', margin: 'auto', textAlign: 'center'}}>
         <p>
           Doors open 30 minutes prior to the first showing for that day.
@@ -317,7 +330,7 @@ function ContactCard(props) {
 function TheaterInfo(props) {
   return (
     <div className="theater-info">
-      <h1 className="info-title">Theater Information</h1>
+      <SectionTitle text="Theater Information" />
       <InfoSection
         title="About Us"
         content="
