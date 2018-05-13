@@ -163,6 +163,26 @@ class MovieGrid extends React.Component {
           "9:45 3D"
         ]
       }
+    }, {
+      "name" : "Assasins Creed",
+      "poster": "img/assassins_creed.jpg",
+      "rating" : "R",
+      "runtime" : "2h 20m",
+      "showtimes" : {
+        "Friday 1/06" : [
+          "1:00 2D",
+          "4:00 2D",
+          "7:00 3D",
+          "9:40 3D",
+          "12:00 3D"
+        ],
+        "Saturday 1/07" : [
+          "12:45 2D",
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
+        ]
+      }
     }];
   }
 
@@ -178,7 +198,7 @@ class MovieGrid extends React.Component {
         <NowShowingSelector
           onChange={(date) => this.handleShowtimes(date)}
         />
-        <div className="movie-grid">
+        <div className="movie-deck">
           {this.movies.map((movie, i) => {
             return (
               <MovieCard
@@ -271,13 +291,36 @@ function TicketInfo(props) {
   )
 }
 
+function InfoSection(props) {
+  return (
+    <div className="info-section">
+      <h3>{props.title}</h3>
+      <p>{props.content}</p>
+    </div>
+  )
+}
+
+function ContactCard(props) {
+  return (
+    <div className="info-section">
+      <h3>{props.title}</h3>
+      <p>{props.desc}</p>
+      <p>
+        {props.name}<br/>
+        {props.phone}<br/>
+        {props.email}
+      </p>
+    </div>
+  )
+}
+
 function TheaterInfo(props) {
   return (
     <div className="theater-info">
       <h1 className="info-title">Theater Information</h1>
-      <div className="info-section">
-        <h3>About Us</h3>
-        <p>
+      <InfoSection
+        title="About Us"
+        content="
           The Reel Deal Theater is a family owned and operated independent movie
           theater located in Los Alamos, NM. In operation since December 2003,
           this theater is a state of the art facility committed to the community.
@@ -285,46 +328,40 @@ function TheaterInfo(props) {
           first-run and other film offerings. Our concession stand offers the
           standard fare (with delicious popcorn) and specialty food items.
           Special events may be planned by contacting the theater manager for
-          rental.
-        </p>
-      </div>
+          rental."
+      />
 
-      <div className="info-section">
-        <h3>Theater Rental</h3>
-        <p>
+      <InfoSection
+        title="Theater Rental"
+        content="
           The Reel Deal is available for conferences, private
           screenings, and daytime entertaining. Movie screens
           and plush seating will help you get your message across
           in style. The concession counter, including desserts
           and/or coffee, can be available for your event.
           To schedule, please call (505) 661-9966.
-        </p>
-      </div>
+        "
+      />
 
-      <div className="info-section">
-        <h3>Job Opportunities</h3>
-        <p>
+      <InfoSection
+        title="Job Opportunities"
+        content="
           Are you interested in being part of a local family run cinema
           operation which includes free first-run movies and all the popcorn
           you can eat? Would you like to learn how to become a projectionist
           and learn the cinema business from the inside-out? Would you like to
           become a manager, assistant manager or supervisor? We have flexible
           hours for students. Please contact Jim O'Donnell at (505) 661-9966.
-        </p>
-      </div>
+        "
+      />
 
-      <div className="info-section">
-        <h3>Screen Advertising</h3>
-        <p>
-          To inquire about rates and formatting of
-          Reel Deal Screen Advertising,
-          contact:<br/>
-          <br/>
-          Kate O'Donnell<br/>
-          reeldealpreshow@yahoo.com<br/>
-          (505) 231-5144 or (505) 662-5551
-        </p>
-      </div>
+      <ContactCard
+        title="Screen Advertising"
+        desc= "To inquire about rates and formatting of Reel Deal Screen Advertising, contact:"
+        name="Kate O'Donnell"
+        phone="(505) 231-5144 or (505) 662-5551"
+        email="reeldealpreshow@yahoo.com"
+      />
     </div>
   )
 }
@@ -381,14 +418,11 @@ class App extends React.Component {
   render(props) {
     return (
       <React.Fragment>
-        <Header
-          gradient="linear-gradient(to bottom, rgba(61, 15, 244, 80%), rgb(173, 15, 244, 100))"
-          background='img/IMG_7137.jpg'
-        />
-        <MovieGrid/>
-        <TicketInfo/>
-        <TheaterInfo/>
-        <Footer/>
+        <Header />
+        <MovieGrid />
+        <TicketInfo />
+        <TheaterInfo />
+        <Footer />
       </React.Fragment>
     );
   }

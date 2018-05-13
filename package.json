@@ -13,6 +13,7 @@
     "imdb-api": "^3.1.2",
     "less": "^3.0.2",
     "less-loader": "^4.1.0",
+    "lokijs": "^1.5.4",
     "nodemon": "^1.17.3",
     "path": "^0.12.7",
     "react": "^16.3.2",
@@ -25,7 +26,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-
     "server": "nodemon src/server.js",
     "webpack": "./node_modules/.bin/webpack -w",
     "parcel": "parcel public/index.html"

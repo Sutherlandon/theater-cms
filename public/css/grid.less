@@ -36,7 +36,7 @@ header {
       font-size: 2.5em;
       padding-left: 0.67em;
 
-      @media(max-width: 24em) {
+      @media(max-width: @sm-screen) {
         padding-left: 0;
         text-align: center;
         width: 100%;
@@ -50,7 +50,7 @@ header {
   margin: -9em auto 2em;
   text-align: center;
 
-  @media(max-width: 24em) {
+  @media(max-width: @sm-screen) {
     font-size: 1.25em;
   }
 
@@ -61,7 +61,7 @@ header {
     margin-right: 0.5em;
     vertical-align: middle;
 
-    @media(max-width: 24em) {
+    @media(max-width: @sm-screen) {
       font-size: 1.25em;
     }
   }
@@ -112,7 +112,7 @@ header {
   margin: -9em auto 2em;
   text-align: center;
 
-  @media(max-width: 24em) {
+  @media(max-width: @sm-screen) {
     font-size: 1.25em;
   }
 
@@ -123,7 +123,7 @@ header {
     margin-right: 0.5em;
     vertical-align: middle;
 
-    @media(max-width: 24em) {
+    @media(max-width: @sm-screen) {
       font-size: 1.25em;
     }
   }
@@ -135,13 +135,19 @@ header {
   //max-width: @content-width;
 }
 
-.movie-grid {
+.movie-deck {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   padding: 0.5em 0.5em 2em;
 
-  @media(max-width: 24em) {
+  @media(max-width: @md-screen) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media(max-width: @sm-screen) {
+    display: flex;
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
@@ -156,10 +162,16 @@ header {
     border: 1px solid #DDD;
     border-radius: 10px;
     margin: 0.5em;
-    min-width: 13.125em;
-    max-width: 18em;
+    min-width: @md-screen/4 + 1;
+    max-width: 14.375em;
     flex: 1;
     text-align: center;
+
+    @media(max-width: @md-screen) {
+      &:nth-child(odd) {
+        justify-self: end;
+      }
+    }
 
     .poster {
       img {
@@ -247,7 +259,7 @@ header {
                        "desc desc"
                        "2D 3D";
 
-  @media(max-width: 24em) {
+  @media(max-width: @sm-screen) {
     grid-template-areas: "title"
                          "desc"
                          "2D"
@@ -285,14 +297,14 @@ header {
   padding: 0 2em 2em 2em;
   color: #DDD;
 
-  @media(max-width: 24em) {
+  @media(max-width: @sm-screen) {
     grid-template-columns: 1fr;
   }
 
   .info-title {
     grid-column: 1/span 2;
 
-    @media(max-width: 24em) {
+    @media(max-width: @sm-screen) {
       grid-column: 1;
     }
   }
@@ -308,7 +320,7 @@ header {
   max-width: @max-content-width;
   padding: 0 2em 2em 2em;
 
-  @media(max-width: 24em) {
+  @media(max-width: @sm-screen) {
     grid-template-columns: 1fr;
   }
 
