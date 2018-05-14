@@ -80,11 +80,29 @@ function MovieCard(props) {
   )
 }
 
+/*
+class DeckSlideIndicator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      display: 'block'
+    }
+  }
+
+  render(props) {
+    return (
+
+    )
+  }
+}
+*/
+
 class MovieGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       current_date: "Friday 1/06",
+      show_indicator: "block"
     };
 
     this.movies = [{
@@ -195,10 +213,11 @@ class MovieGrid extends React.Component {
   render(props) {
     return (
       <React.Fragment>
-        <NowShowingSelector
-          onChange={(date) => this.handleShowtimes(date)}
-        />
-        <div className="movie-deck">
+        <NowShowingSelector onChange={(date) => this.handleShowtimes(date)} />
+        <div className="deck-slide-indicator" style={{display: this.state.show_indicator}}>
+          <div>scroll</div>
+        </div>
+        <div className="movie-deck" onScroll={() => this.setState({show_indicator: "none"})}>
           {this.movies.map((movie, i) => {
             return (
               <MovieCard
@@ -333,39 +352,34 @@ function TheaterInfo(props) {
       <SectionTitle text="Theater Information" />
       <InfoSection
         title="About Us"
-        content="
-          The Reel Deal Theater is a family owned and operated independent movie
-          theater located in Los Alamos, NM. In operation since December 2003,
-          this theater is a state of the art facility committed to the community.
-          Dolby digital and stereo surround sound enhances enjoyment of our
-          first-run and other film offerings. Our concession stand offers the
-          standard fare (with delicious popcorn) and specialty food items.
-          Special events may be planned by contacting the theater manager for
-          rental."
+        content="The Reel Deal Theater is a family owned and operated
+          independent movie theater located in Los Alamos, NM. In operation
+          since December 2003, this theater is a state of the art facility
+          committed to the community. Dolby digital and stereo surround sound
+          enhances enjoyment of our first-run and other film offerings. Our
+          concession stand offers the standard fare (with delicious popcorn) and
+          specialty food items. Special events may be planned by contacting the
+          theater manager for rental."
       />
 
       <InfoSection
         title="Theater Rental"
-        content="
-          The Reel Deal is available for conferences, private
+        content="The Reel Deal is available for conferences, private
           screenings, and daytime entertaining. Movie screens
           and plush seating will help you get your message across
           in style. The concession counter, including desserts
           and/or coffee, can be available for your event.
-          To schedule, please call (505) 661-9966.
-        "
+          To schedule, please call (505) 661-9966."
       />
 
       <InfoSection
         title="Job Opportunities"
-        content="
-          Are you interested in being part of a local family run cinema
+        content=" Are you interested in being part of a local family run cinema
           operation which includes free first-run movies and all the popcorn
           you can eat? Would you like to learn how to become a projectionist
           and learn the cinema business from the inside-out? Would you like to
           become a manager, assistant manager or supervisor? We have flexible
-          hours for students. Please contact Jim O'Donnell at (505) 661-9966.
-        "
+          hours for students. Please contact Jim O'Donnell at (505) 661-9966."
       />
 
       <ContactCard
@@ -421,7 +435,15 @@ function Footer(props) {
           Los Alamos, NM 87544
         </a><br/>
         <br/>
-        <iframe title="location-map" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1616.3278122844838!2d-106.30642527599642!3d35.8819552817943!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd28a8ba3dca947f9!2sReel+Deal+Theater!5e0!3m2!1sen!2sus!4v1482798693924" width="300" height="225" frameBorder="0" style={{border:0}} allowFullScreen></iframe>
+        <iframe
+          title="location-map"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1616.3278122844838!2d-106.30642527599642!3d35.8819552817943!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xd28a8ba3dca947f9!2sReel+Deal+Theater!5e0!3m2!1sen!2sus!4v1482798693924"
+          width="300"
+          height="225"
+          frameBorder="0"
+          style={{border:0}}
+          allowFullScreen>
+        </iframe>
       </div>
     </div>
   )
