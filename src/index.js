@@ -80,29 +80,12 @@ function MovieCard(props) {
   )
 }
 
-/*
-class DeckSlideIndicator extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      display: 'block'
-    }
-  }
-
-  render(props) {
-    return (
-
-    )
-  }
-}
-*/
-
 class MovieGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       current_date: "Friday 1/06",
-      show_indicator: "block"
+      show_indicator: ""
     };
 
     this.movies = [{

@@ -26,7 +26,7 @@ header {
 
   .gradient-overlay {
     background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple);
-    background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple), url('../img/IMG_7137.jpg');
+    background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple), url('../img/IMG_7137.JPG');
     background-position: top center;
     background-size: cover;
     height: 100%;
@@ -113,10 +113,13 @@ header {
 }
 
 .deck-slide-indicator {
+  display: none;
+
   @media(max-width: @sm-screen) {
-    color: @primary-light;
     background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple);
     border-radius: 10px 0 0 10px;
+    color: @primary-light;
+    display: block;
     height: 4em;
     padding-top: 1.5em;
     padding-left: 0.5em;
