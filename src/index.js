@@ -9,6 +9,12 @@ class NowShowingSelector extends React.Component {
       open: false
     }
 
+    this.showtimes = props.options.map((time, i) => {
+      return (
+        <li key={i} onClick={() => this.handleChange(time)}>{time}</li>
+      )
+    });
+
     this.handleChange = this.handleChange.bind(this);
     this.propsOnChange = props.onChange;
   }
@@ -21,7 +27,7 @@ class NowShowingSelector extends React.Component {
     this.propsOnChange(new_value)
   }
 
-  render(props) {
+  render() {
     const select_id = "now-showing"; // must be unique to the app
     const display = this.state.open ? "block" : "none";
 
@@ -35,8 +41,17 @@ class NowShowingSelector extends React.Component {
             <span className="caret"></span>
           </button>
           <ul className="select-options" style={{display: display}}>
+            {this.showtimes}
+
+            {/*
             <li onClick={() => this.handleChange("Friday 1/06")}>Friday 1/06</li>
             <li onClick={() => this.handleChange("Saturday 1/07")}>Saturday 1/07</li>
+            <li onClick={() => this.handleChange("Sunday 1/08")}>Sunday 1/08</li>
+            <li onClick={() => this.handleChange("Monday 1/09")}>Monday 1/09</li>
+            <li onClick={() => this.handleChange("Tuesday 1/10")}>Tuesday 1/10</li>
+            <li onClick={() => this.handleChange("Wednesday 1/11")}>Wednesday 1/11</li>
+            <li onClick={() => this.handleChange("Thursday 1/12")}>Thursday 1/12</li>
+            */}
           </ul>
         </div>
       </div>
@@ -88,105 +103,31 @@ class MovieGrid extends React.Component {
       show_indicator: ""
     };
 
-    this.movies = [{
-      "name" : "Star Wars: Rogue One",
-      "poster": "img/sing.jpg",
-      "rating" : "G",
-      "runtime" : "2h 13m",
-      "showtimes" : {
-        "Friday 1/06" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ],
-        "Saturday 1/07" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ]
-      }
-    }, {
-      "name" : "Assasins Creed",
-      "poster": "img/passengers.jpg",
-      "rating" : "PG",
-      "runtime" : "2h 20m",
-      "showtimes" : {
-        "Friday 1/06" : [
-          "1:00 2D",
-          "4:00 2D",
-          "7:00 3D",
-          "9:40 3D"
-        ],
-        "Saturday 1/07" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ]
-      }
-    }, {
-      "name" : "Star Wars: Rogue One",
-      "poster": "img/star_wars.jpg",
-      "rating" : "PG-13",
-      "runtime" : "2h 13m",
-      "showtimes" : {
-        "Friday 1/06" : [
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ],
-        "Saturday 1/07" : [
-          "1:00 2D",
-          "4:00 2D",
-          "7:00 3D",
-          "9:40 3D"
-        ]
-      }
-    }, {
-      "name" : "Assasins Creed",
-      "poster": "img/assassins_creed.jpg",
-      "rating" : "R",
-      "runtime" : "2h 20m",
-      "showtimes" : {
-        "Friday 1/06" : [
-          "1:00 2D",
-          "4:00 2D",
-          "7:00 3D",
-          "9:40 3D",
-          "12:00 3D"
-        ],
-        "Saturday 1/07" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ]
-      }
-    }, {
-      "name" : "Assasins Creed",
-      "poster": "img/assassins_creed.jpg",
-      "rating" : "R",
-      "runtime" : "2h 20m",
-      "showtimes" : {
-        "Friday 1/06" : [
-          "1:00 2D",
-          "4:00 2D",
-          "7:00 3D",
-          "9:40 3D",
-          "12:00 3D"
-        ],
-        "Saturday 1/07" : [
-          "12:45 2D",
-          "3:45 2D",
-          "6:45 3D",
-          "9:45 3D"
-        ]
-      }
-    }];
+    // This reads a global variable defined in public/js/db.js
+    // eventually this should query something like LokiJS
+    this.movies = global.db.movies;
   }
 
+  /**
+   * Gets a list dates that movies are showing on
+   */
+  getShowdates() {
+    let showtimes = [];
+    this.movies.forEach((movie) => {
+      for (const day in movie.showtimes) {
+        // if the list does not contain the show day
+        if (showtimes.indexOf(day) === -1 ) {
+          showtimes.push(day);
+        }
+      }
+    });
+
+    return showtimes;
+  }
+
+  /**
+   * Change the showtimes of the displayed movies
+   */
   handleShowtimes(selected_date) {
     this.setState({
       current_date: selected_date
@@ -196,7 +137,9 @@ class MovieGrid extends React.Component {
   render(props) {
     return (
       <React.Fragment>
-        <NowShowingSelector onChange={(date) => this.handleShowtimes(date)} />
+        <NowShowingSelector
+          options={this.getShowdates()}
+          onChange={(date) => this.handleShowtimes(date)} />
         <div className="deck-slide-indicator" style={{display: this.state.show_indicator}}>
           <div>scroll</div>
         </div>
