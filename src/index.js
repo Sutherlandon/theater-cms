@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import * as Scroll from 'react-scroll';
+import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
 
 class NowShowingSelector extends React.Component {
   constructor(props) {
@@ -42,16 +44,6 @@ class NowShowingSelector extends React.Component {
           </button>
           <ul className="select-options" style={{display: display}}>
             {this.showtimes}
-
-            {/*
-            <li onClick={() => this.handleChange("Friday 1/06")}>Friday 1/06</li>
-            <li onClick={() => this.handleChange("Saturday 1/07")}>Saturday 1/07</li>
-            <li onClick={() => this.handleChange("Sunday 1/08")}>Sunday 1/08</li>
-            <li onClick={() => this.handleChange("Monday 1/09")}>Monday 1/09</li>
-            <li onClick={() => this.handleChange("Tuesday 1/10")}>Tuesday 1/10</li>
-            <li onClick={() => this.handleChange("Wednesday 1/11")}>Wednesday 1/11</li>
-            <li onClick={() => this.handleChange("Thursday 1/12")}>Thursday 1/12</li>
-            */}
           </ul>
         </div>
       </div>
@@ -95,6 +87,9 @@ function MovieCard(props) {
   )
 }
 
+/**
+ *
+ */
 class MovieGrid extends React.Component {
   constructor(props) {
     super(props);
@@ -162,19 +157,23 @@ class MovieGrid extends React.Component {
   }
 }
 
+/**
+ * Creates a section heading that when clicked, scrolls that heading to the top
+ * of the screen
+ */
 function SectionTitle(props) {
   return (
-    <h1 className="info-title"
-      onClick={(e) =>
-        e.target.scrollIntoView(true, {
-          behavior: "smooth"
-        })
-      }>
-      {props.text}
-    </h1>
+    <Link to={props.text} smooth={true} duration={1000}>
+      <h1 id={props.text} className="info-title">
+        {props.text}
+      </h1>
+    </Link>
   )
 }
 
+/**
+ *
+ */
 function TicketInfo(props) {
   return (
     <div className="ticket-info">
