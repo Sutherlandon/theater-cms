@@ -53,6 +53,8 @@ header {
 
   @media(max-width: @sm-screen) {
     font-size: 1.25em;
+    margin-top: -10em;
+    width: 75%;
   }
 
   .select-label {
@@ -64,11 +66,19 @@ header {
 
     @media(max-width: @sm-screen) {
       font-size: 1.25em;
+      display: block;
+      margin: 0 auto 0.5em;
     }
   }
 
   .select-wrapper {
     display: inline-block;
+    position: relative;
+
+    @media(max-width: @sm-screen) {
+      display: block;
+      margin: 0 auto 0.5em;
+    }
 
     .select-button {
       background-color: rgba(3,3,3,40%);
@@ -77,10 +87,17 @@ header {
       color: @primary-light;
       font-size: 1.25em;
       padding: 0.5em;
+      text-align: left;
       width: 100%;
+
+      &:hover {
+        background-color: rgba(3,3,3,60%);
+      }
 
       .caret {
         border-width: 6px;
+        float: right;
+        margin-top: 10px;
       }
     }
 
@@ -97,6 +114,7 @@ header {
       padding: 0;
       position: absolute;
       text-align: left;
+      width: 100%;
       z-index: 1000;
 
       li {
