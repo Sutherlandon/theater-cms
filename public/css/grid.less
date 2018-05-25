@@ -132,6 +132,36 @@ header {
 
 .deck-slide-indicator {
   display: none;
+  opacity: 1;
+  max-height: 1em;
+  transition: opacity 1s, max-height 1s;
+
+  @media(max-width: @sm-screen) {
+    color: fadeout(@primary-light, 20%);
+    display: block;
+    margin: -1em auto 2em;
+    text-align: center;
+
+    &::after {
+      border: solid fadeout(@primary-light, 20%);
+      border-width: 0 3px 3px 0;
+      content: "";
+      display: inline-block;
+      padding: 0.25em;
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+  }
+
+  &.collapsed {
+    opacity: 0;
+    max-height: 0;
+  }
+}
+
+/*
+.deck-slide-indicator {
+  display: none;
 
   @media(max-width: @sm-screen) {
     background-image: linear-gradient(to bottom, fadeout(@grad-blue, 20%), @grad-purple);
@@ -164,6 +194,7 @@ header {
     }
   }
 }
+*/
 
 .movie-deck {
   display: flex;
@@ -185,7 +216,6 @@ header {
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
   }
-
 
   .movie-card {
     background-color: @primary-light;
@@ -271,13 +301,17 @@ header {
 }
 
 .info-title {
-  color: @primary-light;
-  cursor: pointer;
+  display: block;
   background-image: linear-gradient(to bottom, @grad-blue, @grad-purple);
   border-radius: 5px;
+  color: @primary-light;
+  cursor: pointer;
   margin: -1em auto 0;
-  padding: 0.5em;
-  text-align: center;
+
+  h1 {
+    padding: 0 0.5em;
+    text-align: center;
+  }
 }
 
 .ticket-info {
@@ -285,7 +319,7 @@ header {
   display: grid;
   grid-column-gap: 2em;
   grid-row-gap: 1em;
-  padding: 1em 1em 3em;
+  padding: 0 1em 3em;
   grid-template-areas: "title title"
                        "desc desc"
                        "2D 3D";

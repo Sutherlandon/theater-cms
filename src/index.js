@@ -95,7 +95,7 @@ class MovieGrid extends React.Component {
     super(props);
     this.state = {
       current_date: "Friday 1/06",
-      show_indicator: ""
+      collapsed: ""
     };
 
     // This reads a global variable defined in public/js/db.js
@@ -135,6 +135,31 @@ class MovieGrid extends React.Component {
         <NowShowingSelector
           options={this.getShowdates()}
           onChange={(date) => this.handleShowtimes(date)} />
+        <div className="movie-deck" onScroll={() => this.setState({collapsed: "collapsed"})}>
+          {this.movies.map((movie, i) => {
+            return (
+              <MovieCard
+                key={i}
+                name={movie.name}
+                poster={movie.poster}
+                rating={movie.rating}
+                runtime={movie.runtime}
+                showtimes={movie.showtimes[this.state.current_date]}
+              />
+            );
+          })}
+        </div>
+        <div className={"deck-slide-indicator " + this.state.collapsed}>
+          Slide for more
+        </div>
+      </React.Fragment>
+    );
+    /*
+    return (
+      <React.Fragment>
+        <NowShowingSelector
+          options={this.getShowdates()}
+          onChange={(date) => this.handleShowtimes(date)} />
         <div className="deck-slide-indicator" style={{display: this.state.show_indicator}}>
           <div>scroll</div>
         </div>
@@ -154,6 +179,7 @@ class MovieGrid extends React.Component {
         </div>
       </React.Fragment>
     );
+    */
   }
 }
 
@@ -163,8 +189,8 @@ class MovieGrid extends React.Component {
  */
 function SectionTitle(props) {
   return (
-    <Link to={props.text} smooth={true} duration={1000}>
-      <h1 id={props.text} className="info-title">
+    <Link className="info-title" to={props.text} smooth={true} duration={1000}>
+      <h1 id={props.text}>
         {props.text}
       </h1>
     </Link>
