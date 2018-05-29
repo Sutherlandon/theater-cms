@@ -109,13 +109,16 @@ header {
       height: auto;
       list-style-type: none;
       margin: 0;
-      max-height: 200px;
       overflow-x: hidden;
       padding: 0;
       position: absolute;
       text-align: left;
       width: 100%;
       z-index: 1000;
+
+      @media(max-width: @sm-screen) {
+        max-height: 250px;
+      }
 
       li {
         cursor: pointer;
@@ -338,8 +341,16 @@ header {
     .D3 { margin: auto; }
   }
 
-  .info-title { grid-area: title; }
-  .info-desc { grid-area: desc; }
+  .info-title {
+    grid-area: title;
+  }
+
+  .info-desc {
+    grid-area: desc;
+    margin: auto;
+    max-width: 550px;
+    text-align: center;
+  }
 
   .D2 {
     grid-area: 2D;

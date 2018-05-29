@@ -3,7 +3,16 @@ import ReactDOM from 'react-dom';
 //import * as Scroll from 'react-scroll';
 import { Link } from 'react-scroll'
 
-class NowShowingSelector extends React.Component {
+/**
+ * A select.
+ * @param id
+ *  The id of the selector. Must be unique for each app
+ * @param onChange
+ *   A function to do when the select box changes
+ * @param options
+ *  The list of options for the select box
+ */
+class SelectBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,12 +20,17 @@ class NowShowingSelector extends React.Component {
       open: false
     }
 
+    // the id of the select box
+    this.id = props.id;
+
+    // create a list of options to select from
     this.showtimes = props.options.map((time, i) => {
       return (
         <li key={i} onClick={() => this.handleChange(time)}>{time}</li>
       )
     });
 
+    // bind functions passed in
     this.handleChange = this.handleChange.bind(this);
     this.propsOnChange = props.onChange;
   }
@@ -30,14 +44,13 @@ class NowShowingSelector extends React.Component {
   }
 
   render() {
-    const select_id = "now-showing"; // must be unique to the app
     const display = this.state.open ? "block" : "none";
 
     return (
       <div className="select-input">
-        <label htmlFor={select_id + "-select"} className="select-label">Now Showing</label>
+        <label htmlFor={this.id + "-select"} className="select-label">Now Showing</label>
         <div className="select-wrapper">
-          <button id={select_id + "-select"} className="select-button"
+          <button id={this.id + "-select"} className="select-button"
             onClick={() => this.setState({open: !this.state.open})}>
             {this.state.value}
             <span className="caret"></span>
@@ -132,9 +145,11 @@ class MovieGrid extends React.Component {
   render(props) {
     return (
       <React.Fragment>
-        <NowShowingSelector
+        <SelectBox
+          id="now-showing"
           options={this.getShowdates()}
-          onChange={(date) => this.handleShowtimes(date)} />
+          onChange={(date) => this.handleShowtimes(date)}
+        />
         <div className="movie-deck" onScroll={() => this.setState({collapsed: "collapsed"})}>
           {this.movies.map((movie, i) => {
             return (
@@ -194,7 +209,8 @@ function SectionTitle(props) {
       duration={1000}
       offset={-30}
       smooth={true}
-      to={props.text} >
+      to={props.text}
+    >
       <h1 id={props.text}>
         {props.text}
       </h1>
@@ -209,7 +225,7 @@ function TicketInfo(props) {
   return (
     <div className="ticket-info">
       <SectionTitle text="Ticket Information" />
-      <div className="info-desc" style={{maxWidth: '550px', margin: 'auto', textAlign: 'center'}}>
+      <div className="info-desc">
         <p>
           Doors open 30 minutes prior to the first showing for that day.
           Tickets can be purchased the day of show or as early as the Tuesday
