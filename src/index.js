@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as Scroll from 'react-scroll';
-import { Link, Element, Events, animateScroll as scroll, scrollSpy, scroller } from 'react-scroll'
+//import * as Scroll from 'react-scroll';
+import { Link } from 'react-scroll'
 
 class NowShowingSelector extends React.Component {
   constructor(props) {
@@ -189,7 +189,12 @@ class MovieGrid extends React.Component {
  */
 function SectionTitle(props) {
   return (
-    <Link className="info-title" to={props.text} smooth={true} duration={1000}>
+    <Link
+      className="info-title"
+      duration={1000}
+      offset={-30}
+      smooth={true}
+      to={props.text} >
       <h1 id={props.text}>
         {props.text}
       </h1>
