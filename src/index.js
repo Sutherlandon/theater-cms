@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import * as Scroll from 'react-scroll';
 import { Link } from 'react-scroll'
+
+import { Router, browserHistory } from 'react-router';
+import routs from './routes';
 
 /**
  * A select.
@@ -66,7 +68,7 @@ class SelectBox extends React.Component {
 
 
 /**
- *
+ * Header with Title and Gradient background
  */
 function Header(props) {
   return (
@@ -78,6 +80,9 @@ function Header(props) {
   )
 }
 
+/**
+ *
+ */
 function MovieCard(props) {
   const rating_class = "rating " + props.rating;
   const showtimes = props.showtimes.map((time, i) => {
