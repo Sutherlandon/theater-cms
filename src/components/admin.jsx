@@ -24,25 +24,44 @@ function Menu() {
   return (
     <div id="menu" className='pure-u-1-6'>
         <div className="pure-menu">
-            <a className="pure-menu-heading" href="#">Company</a>
-
             <ul className="pure-menu-list">
                 <li className="pure-menu-item">
-                  <a href="#" className="pure-menu-link">Home</a>
+                  <a href="#" className="pure-menu-link">Movies</a>
                 </li>
                 <li className="pure-menu-item">
                   <a href="#" className="pure-menu-link">About</a>
                 </li>
-
-                <li className="pure-menu-item menu-item-divided pure-menu-selected">
-                    <a href="#" className="pure-menu-link">Services</a>
-                </li>
-
-                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Contact</a></li>
             </ul>
         </div>
     </div>
   )
+}
+
+function MovieInfo(props) {
+  const m = props.movie;
+
+  return (
+    <div className='movie-block'>
+      <input type='text' placeholder='Movie Title' value={props.title} />
+      <select>
+        <option value='G'>G</option>
+        <option value='PG'>PG</option>
+        <option value='PG-13'>PG-13</option>
+        <option value='R'>R</option>
+        <option value='NC-17'>NC-17</option>
+      </select>
+      <input type='text' placeholder='ie. 2:35' value={props.runtime} />
+      {props.showtimes.map((day, i) => {
+        console.log(day);
+        return (
+          <div key={i}>
+            <label>{day.date}</label>
+            <input type='text' placeholder='' value={day.times.join(', ')} />
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
 function Movies() {
@@ -56,12 +75,22 @@ function Movies() {
   return (
     <div className='pure-u-5-6' style={movies_styles}>
       <div className='page-title'>
-        <h2>
-          Here is a list of Movies
-        </h2>
+        <h2> Here is a list of Movies </h2>
       </div>
       <div className='content'>
-        Here is a list of Movies
+        {global.db2.movies.map((movie, i) => {
+          return (
+            <MovieInfo
+              key={i}
+              movie={movie}
+              title={movie.title}
+              poster={movie.poster}
+              rating={movie.rating}
+              runtime={movie.runtime}
+              showtimes={movie.showtimes}
+            />
+          );
+        })}
       </div>
     </div>
   )

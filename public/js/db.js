@@ -1,6 +1,6 @@
 var db = {
   "movies": [{
-    "name" : "Star Wars: Rogue One",
+    "title" : "Sing",
     "poster": "img/sing.jpg",
     "rating" : "G",
     "runtime" : "2h 13m",
@@ -53,7 +53,7 @@ var db = {
       ],
     }
   }, {
-    "name" : "Assasins Creed",
+    "title" : "Passengers",
     "poster": "img/passengers.jpg",
     "rating" : "PG",
     "runtime" : "2h 20m",
@@ -106,7 +106,7 @@ var db = {
       ],
     }
   }, {
-    "name" : "Star Wars: Rogue One",
+    "title" : "Star Wars: Rogue One",
     "poster": "img/star_wars.jpg",
     "rating" : "PG-13",
     "runtime" : "2h 13m",
@@ -158,7 +158,7 @@ var db = {
       ],
     }
   }, {
-    "name" : "Assasins Creed",
+    "title" : "Assasins Creed",
     "poster": "img/assassins_creed.jpg",
     "rating" : "R",
     "runtime" : "2h 20m",
@@ -212,7 +212,7 @@ var db = {
       ],
     }
   }, {
-    "name" : "Assasins Creed",
+    "title" : "Assasins Creed",
     "poster": "img/assassins_creed.jpg",
     "rating" : "R",
     "runtime" : "2h 20m",
@@ -267,3 +267,38 @@ var db = {
     }
   }]
 };
+
+var db2 = {
+  "movies": [{
+    "title" : "Sing",
+    "poster": "img/sing.jpg",
+    "rating" : "G",
+    "runtime" : "2h 13m",
+    "showtimes" : [{
+        "date": "Friday 1/06",
+        "times": [
+          "12:45 2D",
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
+        ],
+      }, {
+        "date": "Saturday 1/07",
+        "times": [
+          "12:45 2D",
+          "3:45 2D",
+          "6:45 3D",
+          "9:45 3D"
+        ],
+      }, {
+        "date": "Sunday 1/08",
+        "times": [
+          "12:45 2D",
+          "3:45 2D",
+          "5:45 3D",
+          "6:45 3D",
+          "9:45 3D"
+        ],
+      }]
+    }]
+  };

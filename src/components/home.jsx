@@ -91,7 +91,7 @@ function MovieCard(props) {
   return (
     <div className="movie-card">
       <div className="poster">
-        <img src={props.poster} alt={props.name}/>
+        <img src={props.poster} alt={props.title}/>
       </div>
       <div className="info">
         <span className={rating_class}>{props.rating}</span>
@@ -157,7 +157,7 @@ class MovieGrid extends React.Component {
             return (
               <MovieCard
                 key={i}
-                name={movie.name}
+                titel={movie.title}
                 poster={movie.poster}
                 rating={movie.rating}
                 runtime={movie.runtime}
