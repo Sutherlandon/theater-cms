@@ -16,28 +16,12 @@ function Header() {
   )
 }
 
-/*
-<!-- Menu toggle -->
-<a href="#menu" id="menuLink" class="menu-link">
-    <!-- Hamburger icon -->
-    <span></span>
-</a>
-*/
-
 function Menu() {
   return (
-    <div id="menu">
-        <div className="pure-menu">
-            <ul className="pure-menu-list">
-                <li className="pure-menu-item">
-                  <a href="#" className="pure-menu-link">Movies</a>
-                </li>
-                <li className="pure-menu-item">
-                  <a href="#" className="pure-menu-link">About</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <nav className="nav flex-column nav-pills">
+      <a className="nav-link active" href="#">Movies</a>
+      <a className="nav-link" href="#">About</a>
+    </nav>
   )
 }
 
@@ -52,7 +36,12 @@ function MovieInfo(props) {
             <div className='form-row'>
               <div className='form-group col'>
                 <label htmlFor={props.title + '_id'}>Title</label>
-                <input id={props.title + '_id'} type='text' className='form-control' placeholder='Movie Title' value={props.title} />
+                <input type='text'
+                  id={props.title + '_id'}
+                  className='form-control'
+                  placeholder='Movie Title'
+                  value={props.title}
+                />
               </div>
               <div className='form-group col'>
                 <label htmlFor={props.title + '_rating'}>Rating</label>
@@ -66,7 +55,12 @@ function MovieInfo(props) {
               </div>
               <div className='form-group col'>
                 <label htmlFor={props.title + '_run'}>Runtime</label>
-                <input id={props.title + '_run'} type='text' className='form-control' placeholder='ie. 2:35' value={props.runtime} />
+                <input type='text'
+                  id={props.title + '_run'}
+                  className='form-control'
+                  placeholder='ie. 2:35'
+                  value={props.runtime}
+                />
               </div>
             </div>
             <div className='form-group row'>
@@ -123,8 +117,8 @@ function MovieInfo(props) {
 
 function Movies() {
   const movies_styles = {
-    'background-color': 'whitesmoke',
-    'box-sizing': 'border-box',
+    'backgroundColor': 'whitesmoke',
+    'boxSizing': 'border-box',
     'height': '100%',
     'padding': '1em'
   }
@@ -157,8 +151,8 @@ export function Admin(props) {
   return (
     <React.Fragment>
       <Header />
-      <div className='row' style={{'height': '100%'}}>
-        <div className='col col-auto'>
+      <div className='row no-gutters' style={{'height': '100%'}}>
+        <div className='col col-2'>
           <Menu />
         </div>
         <div className='col'>
