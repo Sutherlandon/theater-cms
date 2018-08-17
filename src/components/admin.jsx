@@ -25,94 +25,158 @@ function Menu() {
   )
 }
 
-function MovieInfo(props) {
-  const m = props.movie;
+class MovieInfo extends React.Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className='movie-block'>
-      <form>
-        <div className='row mb-4'>
-          <div className='col col-9'>
-            <div className='form-row'>
-              <div className='form-group col'>
-                <label htmlFor={props.title + '_id'}>Title</label>
-                <input type='text'
-                  id={props.title + '_id'}
-                  className='form-control'
-                  placeholder='Movie Title'
-                  value={props.title}
-                />
-              </div>
-              <div className='form-group col'>
-                <label htmlFor={props.title + '_rating'}>Rating</label>
-                <select id={props.title + '_rating'} className='form-control'>
-                  <option value='G'>G</option>
-                  <option value='PG'>PG</option>
-                  <option value='PG-13'>PG-13</option>
-                  <option value='R'>R</option>
-                  <option value='NC-17'>NC-17</option>
-                </select>
-              </div>
-              <div className='form-group col'>
-                <label htmlFor={props.title + '_run'}>Runtime</label>
-                <input type='text'
-                  id={props.title + '_run'}
-                  className='form-control'
-                  placeholder='ie. 2:35'
-                  value={props.runtime}
-                />
-              </div>
-            </div>
-            <div className='form-group row'>
-              <label htmlFor={props.title + '_start'} className='col-auto col-form-label'>Start Date</label>
-              <div className='col-auto'>
-                <DatePicker id='start_date'
-                  name='start_date'
-                  className='form-control'
-                  dateFormat='MM/DD/YYYY'
-                  selected={moment(m.start_date)}/>
-              </div>
-              <label htmlFor={props.title + '_end'} className='col-auto col-form-label'>End Date</label>
-              <div className='col-auto'>
-                <DatePicker id='end_date'
-                  name='end_date'
-                  className='form-control'
-                  dateFormat='MM/DD/YYYY'
-                  selected={moment(m.end_date)}/>
-              </div>
-            </div>
-            {props.showtimes.map((day, i) => {
-              console.log(day);
-              return (
-                <div key={i} className='form-group row'>
-                  <label className='col-md-2 col-form-label'>{day.date}</label>
-                  <div className='col-md-10'>
-                    <input type='text' className='form-control' placeholder='' value={day.times.join(', ')} />
-                  </div>
+    this.state = {
+      title: props.title,
+      rating: props.rating,
+      runtime: props.runtime,
+      showtimes: [{
+        day: 'Sunday',
+        times: ''
+      }, {
+        day: 'Monday',
+        times: ''
+      }, {
+        day: 'Tuesday',
+        times: ""
+      }, {
+        day: 'Wednesday',
+        times: ''
+      }, {
+        day: 'Thursday',
+        times: ''
+      }, {
+        day: 'Friday',
+        times: ''
+      }, {
+        day: 'Saturday',
+        times: ''
+      }]
+    }
+
+    this.m = props.movie;
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event) {
+    const name = event.target.name;
+    let value;
+    if (event.target.type === 'select') {
+      value = event.target.selected;
+    } else {
+      value = event.target.value;
+    }
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  render() {
+    return (
+      <div className='movie-block'>
+        <form>
+          <div className='row mb-4'>
+            <div className='col col-9'>
+              <div className='form-row'>
+                <div className='form-group col'>
+                  <label htmlFor='title'>Title</label>
+                  <input type='text'
+                    id='title'
+                    name='title'
+                    className='form-control'
+                    placeholder='Movie Title'
+                    value={this.state.title}
+                    onChange={this.handleChange}
+                  />
                 </div>
-              );
-            })}
-          </div>
-          <div className='col col-3'>
-            <div>Poster</div>
-            <div className='card'>
-              <img className='card-img-top' src={m.poster}/>
-              <div className='card-body'>
-                <a href='#' className='btn btn-primary'>Change</a>
+                <div className='form-group col'>
+                  <label htmlFor='rating'>Rating</label>
+                  <select id='rating'
+                    className='form-control'
+                    checked={this.state.rating}
+                    onChange={this.handleChange}
+                    >
+                    <option value='G'>G</option>
+                    <option value='PG'>PG</option>
+                    <option value='PG-13'>PG-13</option>
+                    <option value='R'>R</option>
+                    <option value='NC-17'>NC-17</option>
+                  </select>
+                </div>
+                <div className='form-group col'>
+                  <label htmlFor='runtime'>Runtime</label>
+                  <input type='text'
+                    id='runtime'
+                    name='runtime'
+                    className='form-control'
+                    placeholder='ie. 2:35'
+                    value={this.state.runtime}
+                    onChange={this.handleChange}
+                  />
+                </div>
+              </div>
+              <div className='form-group row'>
+                <label htmlFor={this.props.title + '_start'} className='col-auto col-form-label'>Start Date</label>
+                <div className='col-auto'>
+                  <DatePicker id='start_date'
+                    name='start_date'
+                    className='form-control'
+                    dateFormat='MM/DD/YYYY'
+                    selected={moment(this.m.start_date)}/>
+                </div>
+                <label htmlFor={this.props.title + '_end'} className='col-auto col-form-label'>End Date</label>
+                <div className='col-auto'>
+                  <DatePicker id='end_date'
+                    name='end_date'
+                    className='form-control'
+                    dateFormat='MM/DD/YYYY'
+                    selected={moment(this.m.end_date)}/>
+                </div>
+              </div>
+              {this.state.showtimes.map((day, i) => {
+                console.log(day);
+                return (
+                  <div key={i} className='form-group row'>
+                    <label className='col-md-2 col-form-label'>{day.day}</label>
+                    <div className='col-md-10'>
+                      <input type='text'
+                        name={day.day}
+                        className='form-control'
+                        placeholder=''
+                        value={day.times}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+                );
+              }, this)}
+            </div>
+            <div className='col col-3'>
+              <div>Poster</div>
+              <div className='card'>
+                <img className='card-img-top' src={this.m.poster}/>
+                <div className='card-body'>
+                  <a href='#' className='btn btn-primary'>Change</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div className='row'>
-          <div className='col col-9 mx-auto'>
-            <button type='submit' className='btn btn-primary w-100' value='submit'>
-              Save
-            </button>
+          <div className='row'>
+            <div className='col col-9 mx-auto'>
+              <button type='submit' className='btn btn-primary w-100' value='submit'>
+                Save
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
-  );
+        </form>
+      </div>
+    );
+  }
 }
 
 function Movies() {
