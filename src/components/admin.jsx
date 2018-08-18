@@ -33,28 +33,9 @@ class MovieInfo extends React.Component {
       title: props.title,
       rating: props.rating,
       runtime: props.runtime,
-      showtimes: [{
-        day: 'Sunday',
-        times: ''
-      }, {
-        day: 'Monday',
-        times: ''
-      }, {
-        day: 'Tuesday',
-        times: ""
-      }, {
-        day: 'Wednesday',
-        times: ''
-      }, {
-        day: 'Thursday',
-        times: ''
-      }, {
-        day: 'Friday',
-        times: ''
-      }, {
-        day: 'Saturday',
-        times: ''
-      }]
+      start_date: props.start_date,
+      start_date: props.end_date,
+      showtimes: [...props.showtimes],
     }
 
     this.m = props.movie;
@@ -121,31 +102,35 @@ class MovieInfo extends React.Component {
                 </div>
               </div>
               <div className='form-group row'>
-                <label htmlFor={this.props.title + '_start'} className='col-auto col-form-label'>Start Date</label>
+                <label htmlFor='start_date' className='col-auto col-form-label'>Start Date</label>
                 <div className='col-auto'>
                   <DatePicker id='start_date'
                     name='start_date'
                     className='form-control'
                     dateFormat='MM/DD/YYYY'
-                    selected={moment(this.m.start_date)}/>
+                    selected={moment(this.m.start_date)}
+                    onChange={this.handleChange}
+                  />
                 </div>
-                <label htmlFor={this.props.title + '_end'} className='col-auto col-form-label'>End Date</label>
+                <label htmlFor='end_date' className='col-auto col-form-label'>End Date</label>
                 <div className='col-auto'>
                   <DatePicker id='end_date'
                     name='end_date'
                     className='form-control'
                     dateFormat='MM/DD/YYYY'
-                    selected={moment(this.m.end_date)}/>
+                    selected={moment(this.m.end_date)}
+                    onChange={this.handleChange}
+                  />
                 </div>
               </div>
               {this.state.showtimes.map((day, i) => {
                 console.log(day);
                 return (
                   <div key={i} className='form-group row'>
-                    <label className='col-md-2 col-form-label'>{day.day}</label>
+                    <label className='col-md-2 col-form-label'>{day.date}</label>
                     <div className='col-md-10'>
                       <input type='text'
-                        name={day.day}
+                        name={day.date}
                         className='form-control'
                         placeholder=''
                         value={day.times}
