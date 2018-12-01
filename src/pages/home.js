@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {
+  Footer,
   Header,
   MovieGrid,
   SectionTitle,
-  TicketInfo,
   TheaterInfo,
-  Footer,
+  TicketInfo,
 } from '../components';
 
 export class Home extends React.Component {

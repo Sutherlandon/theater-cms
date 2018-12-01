@@ -18,8 +18,8 @@ const TicketInfo = (props) => {
           is any show before <b>6pm</b>.
         </p>
       </div>
-      <table className="D2 pure-table pure-table-bordered pure-table-striped">
-        <thead>
+      <table className="D2 table table-striped table-bordered">
+        <thead className='thead-light'>
           <tr>
             <th>Regular 2D</th>
             <th>Matinee</th>
@@ -46,8 +46,8 @@ const TicketInfo = (props) => {
           </tr>
         </tbody>
       </table>
-      <table className="D3 pure-table pure-table-bordered pure-table-striped">
-        <thead>
+      <table className="D3 table table-striped table-bordered">
+        <thead className='thead-light'>
           <tr>
             <th id="reald3d-logo"></th>
             <th>Matinee</th>

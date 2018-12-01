@@ -1,9 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 
-import {
-  SelectBox,
-  MovieCard,
-} from './';
+import SelectBox from './select_box';
+import MovieCard from './movie_card';
 
 /**
  *
@@ -12,27 +11,40 @@ class MovieGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current_date: "Friday 1/06",
-      collapsed: ""
+      collapsed: '',
+      current_date: 'Friday 1/06',
+      movies: [],
     };
+  }
 
-    // This reads a global variable defined in public/js/db.js
-    // eventually this should query something like LokiJS
-    this.movies = global.db.movies;
+  componentDidMount() {
+    /*
+    axios({
+      method: 'get',
+      url: 'http://localhost:4001/movies',
+    })
+    */
+    Promise.resolve(global.db.movies)
+    .then(
+      (result) => {
+        this.setState({ movies: result });
+      },
+      (error) => ({error: 'No movies found.'}),
+    )
   }
 
   /**
    * Gets a list dates that movies are showing on
    */
   getShowdates() {
-    let showtimes = [];
-    this.movies.forEach((movie) => {
-      for (const day in movie.showtimes) {
+    const showtimes = [];
+    this.state.movies.forEach(movie => {
+      Object.keys(movie.showtimes).forEach(day => {
         // if the list does not contain the show day
         if (showtimes.indexOf(day) === -1 ) {
           showtimes.push(day);
         }
-      }
+      });
     });
 
     return showtimes;
@@ -51,12 +63,13 @@ class MovieGrid extends React.Component {
     return (
       <React.Fragment>
         <SelectBox
-          id="now-showing"
+          id='now-showing'
           options={this.getShowdates()}
-          onChange={(date) => this.handleShowtimes(date)}
+          onChange={(date) => this.setState({ current_date: date })}
+          value={this.state.current_date}
         />
-        <div className="movie-deck" onScroll={() => this.setState({collapsed: "collapsed"})}>
-          {this.movies.map((movie, i) => {
+        <div className='movie-deck' onScroll={() => this.setState({collapsed: 'collapsed'})}>
+          {this.state.movies.map((movie, i) => {
             return (
               <MovieCard
                 key={i}
@@ -69,37 +82,11 @@ class MovieGrid extends React.Component {
             );
           })}
         </div>
-        <div className={"deck-slide-indicator " + this.state.collapsed}>
+        <div className={'deck-slide-indicator ' + this.state.collapsed}>
           Slide for more
         </div>
       </React.Fragment>
     );
-    /*
-    return (
-      <React.Fragment>
-        <NowShowingSelector
-          options={this.getShowdates()}
-          onChange={(date) => this.handleShowtimes(date)} />
-        <div className="deck-slide-indicator" style={{display: this.state.show_indicator}}>
-          <div>scroll</div>
-        </div>
-        <div className="movie-deck" onScroll={() => this.setState({show_indicator: "none"})}>
-          {this.movies.map((movie, i) => {
-            return (
-              <MovieCard
-                key={i}
-                name={movie.name}
-                poster={movie.poster}
-                rating={movie.rating}
-                runtime={movie.runtime}
-                showtimes={movie.showtimes[this.state.current_date]}
-              />
-            );
-          })}
-        </div>
-      </React.Fragment>
-    );
-    */
   }
 }
 

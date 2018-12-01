@@ -17,27 +17,18 @@ class SelectBox extends React.Component {
       open: false
     }
 
-    // the id of the select box
-    this.id = props.id;
-
-    // create a list of options to select from
-    this.showtimes = props.options.map((time, i) => {
-      return (
-        <li key={i} onClick={() => this.handleChange(time)}>{time}</li>
-      )
-    });
-
-    // bind functions passed in
     this.handleChange = this.handleChange.bind(this);
-    this.propsOnChange = props.onChange;
   }
 
-  handleChange(new_value) {
+  /**
+   * Close the selector and send the selected value back to the parent
+   */
+  handleChange(date) {
     this.setState({
-      value: new_value,
       open: false
     });
-    this.propsOnChange(new_value)
+
+    this.props.onChange(date)
   }
 
   render() {
@@ -45,15 +36,24 @@ class SelectBox extends React.Component {
 
     return (
       <div className="select-input">
-        <label htmlFor={this.id + "-select"} className="select-label">Now Showing</label>
+        <label
+          htmlFor={this.props.id + "-select"}
+          className="select-label">
+          Now Showing
+        </label>
         <div className="select-wrapper">
-          <button id={this.id + "-select"} className="select-button"
-            onClick={() => this.setState({open: !this.state.open})}>
-            {this.state.value}
+          <button
+            className="select-button"
+            id={this.id + "-select"}
+            onClick={() => this.setState({open: !this.state.open})}
+          >
+            {this.props.value}
             <span className="caret"></span>
           </button>
           <ul className="select-options" style={{display: display}}>
-            {this.showtimes}
+            {this.props.options.map((date, i) => (
+              <li key={i} onClick={() => this.handleChange(date)}>{date}</li>
+            ))}
           </ul>
         </div>
       </div>
