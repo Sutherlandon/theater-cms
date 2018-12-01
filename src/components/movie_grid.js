@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import config from '../config';
 
 import SelectBox from './select_box';
 import MovieCard from './movie_card';
@@ -20,7 +21,8 @@ class MovieGrid extends React.Component {
   componentDidMount() {
     axios({
       method: 'get',
-      url: 'http://localhost:3001/movies',
+      //url: 'http://localhost:3001/movies',
+      url: `${config.dev.base_url}:${config.dev.api_port}/movies`,
     })
     //Promise.resolve(global.db.movies)
     .then(

@@ -9,6 +9,10 @@ const path = require('path');
 const imdb = require('imdb-api');
 const loki = require('lokijs');
 const test_data = require('./test_data.js');
+const config = require('./config.js');
+
+// build the environment
+const env = config.dev;
 
 // build the database
 const db = new loki('db.json', {
@@ -78,6 +82,6 @@ app.get('/movie/:title/:year', function (req, res) {
 /** NOT THIS, this is important" */
 
 // fires up the server to listen on port 3001
-app.listen(3001, function () {
-  console.log('Theater-CMS running (port: 3001)');
+app.listen(env.api_port, function () {
+  console.log(`Theater-CMS running (port: ${env.api_port})`);
 });
