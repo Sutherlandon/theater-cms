@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import { Link } from 'react-scroll'
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { Admin } from './components/admin.jsx';
-import { Home } from './components/home.jsx';
+import { Admin } from './pages/admin';
+import { Home } from './pages/home';
 
 ReactDOM.render((
   <BrowserRouter>
