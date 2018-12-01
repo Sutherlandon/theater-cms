@@ -1,18 +1,53 @@
 /**
  * Author: Landon Sutherland
- * This is the server for the application.
+ * This is the backend API for controlling movie data
  */
 
 // import required packages
-var express = require('express'),
-    path = require('path'),
-    imdb = require('imdb-api');
+const express = require('express');
+const path = require('path');
+const imdb = require('imdb-api');
+const loki = require('lokijs');
+const test_data = require('./test_data.js');
+
+// build the database
+const db = new loki('db.json', {
+  autoload: true,
+  autoloadCallback : () => {
+    // load test data
+    let movies = db.getCollection('movies');
+    if (movies === null) {
+      movies = db.addCollection('movies');
+      test_data.movies.forEach(movie => movies.insert(movie));
+    }
+  },
+  autosave: true,
+  autosaveInterval: 4000
+});
+
 
 // build an express app
 var app = express();
 
 // serves public files like html, css, js, and img
 app.use(express.static(path.join(__dirname, './../dist/')));
+
+// allow cors requests to this api
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+app.get('/movies', (req, res) => {
+  return res.json(db.getCollection('movies').find());
+});
+
+
+
+
+
+/** Beneath here is irrelevent now I think */
 
 // gets movie meta-data based on title from the imbd-api
 app.get('/movie/:title', function (req, res) {
@@ -38,6 +73,9 @@ app.get('/movie/:title/:year', function (req, res) {
     res.send(data);
   });
 });
+
+
+/** NOT THIS, this is important" */
 
 // fires up the server to listen on port 3001
 app.listen(3001, function () {

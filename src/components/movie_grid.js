@@ -18,16 +18,15 @@ class MovieGrid extends React.Component {
   }
 
   componentDidMount() {
-    /*
     axios({
       method: 'get',
-      url: 'http://localhost:4001/movies',
+      url: 'http://localhost:3001/movies',
     })
-    */
-    Promise.resolve(global.db.movies)
+    //Promise.resolve(global.db.movies)
     .then(
       (result) => {
-        this.setState({ movies: result });
+        console.log(result.data);
+        this.setState({ movies: result.data });
       },
       (error) => ({error: 'No movies found.'}),
     )
