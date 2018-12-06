@@ -8,6 +8,8 @@ const express = require('express');
 const path = require('path');
 const imdb = require('imdb-api');
 const loki = require('lokijs');
+const Hapi = require('hapi');
+
 const test_data = require('./test_data.js');
 const config = require('./config.js');
 
@@ -30,29 +32,36 @@ const db = new loki('db.json', {
 });
 
 
-// build an express app
-var app = express();
-
-// serves public files like html, css, js, and img
-app.use(express.static(path.join(__dirname, './../dist/')));
-
-// allow cors requests to this api
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+// build an api with hap
+var server = Hapi.server({
+  host: env.base_url,
+  port: env.api_port,
+  routes: {
+    cors: true
+  }
 });
 
-app.get('/movies', (req, res) => {
-  return res.json(db.getCollection('movies').find());
+const init = async () => {
+  await server.start();
+  console.log(`Server running at: ${server.info.uri}`);
+}
+
+
+server.route({
+  method: 'GET',
+  path: '/movies',
+  handler: (request, h) => {
+    return h.response(db.getCollection('movies').find());
+  }
 });
 
-
+init();
 
 
 
 /** Beneath here is irrelevent now I think */
 
+/*
 // gets movie meta-data based on title from the imbd-api
 app.get('/movie/:title', function (req, res) {
   imdb.getReq({
@@ -78,10 +87,8 @@ app.get('/movie/:title/:year', function (req, res) {
   });
 });
 
-
-/** NOT THIS, this is important" */
-
 // fires up the server to listen on port 3001
 app.listen(env.api_port, function () {
   console.log(`Theater-CMS running (port: ${env.api_port})`);
 });
+*/

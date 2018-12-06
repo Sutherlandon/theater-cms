@@ -22,7 +22,7 @@ class MovieGrid extends React.Component {
     axios({
       method: 'get',
       //url: 'http://localhost:3001/movies',
-      url: `${config.dev.base_url}:${config.dev.api_port}/movies`,
+      url: `http://${config.dev.base_url}:${config.dev.api_port}/movies`,
     })
     //Promise.resolve(global.db.movies)
     .then(
