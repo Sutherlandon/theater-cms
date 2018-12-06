@@ -5,7 +5,9 @@ function Footer(props) {
     <div className="footer">
       <div className="contact-info">
         <h3>Contact</h3>
-        <table className="pure-table pure-table-horizontal pure-table-striped">
+        <table className="table table-striped table-bordered" style={{
+          borderRadius: '5px'
+        }}>
           <tbody>
             <tr>
               <td>Showtimes</td>

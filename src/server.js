@@ -46,7 +46,6 @@ const init = async () => {
   console.log(`Server running at: ${server.info.uri}`);
 }
 
-
 server.route({
   method: 'GET',
   path: '/movies',
