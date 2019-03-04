@@ -39,14 +39,44 @@ class MovieInfo extends React.Component {
       title: props.title,
       rating: props.rating,
       runtime: props.runtime,
+<<<<<<< HEAD:src/components/admin.jsx
       start_date: props.start_date,
       start_date: props.end_date,
       showtimes: [...props.showtimes],
+=======
+      start_date: moment(props.start_date),
+      end_date: moment(props.end_date),
+      showtimes: [],
+>>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
     }
 
-    this.m = props.movie;
-
     this.handleChange = this.handleChange.bind(this);
+    this.handleChangeShowtimes = this.handleChangeShowtimes.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChangeNamed = this.handleChangeNamed.bind(this);
+  }
+
+  componentDidMount() {
+    console.table(this.state);
+  }
+
+  enumerateDates(field, value) {
+    let dates = [];
+
+    // get the start and end days of the date range
+    let start = moment('start_date' == field ? value : this.state.start_date).startOf('day');
+    let end   = moment('end_date'   == field ? value : this.state.end_date).startOf('day');
+
+    // enumerate the days
+    do {
+      dates.push(start.clone());
+      console.log(start.diff(end));
+    } while (start.add(1, 'days').diff(end) < 1);
+
+    this.setState({
+      [field]: value,
+      showtimes: dates.map((date) => {return {date: date, times: ''}}),
+    })
   }
 
   handleChange(event) {
@@ -63,16 +93,46 @@ class MovieInfo extends React.Component {
     });
   }
 
+  handleChangeNamed(field, value) {
+    // if it is a date that is changing, enumerate the dates in between
+    if (['start_date', 'end_date'].includes(field)) {
+      this.enumerateDates(field, value);
+    }
+    // otherwise just update the field given with the value given
+    else {
+      this.setState({
+        [field]: value
+      })
+    }
+  }
+
+  handleChangeShowtimes(event, i) {
+    const showtimes = [...this.state.showtimes];
+    showtimes[i].times = event.target.value;
+
+    this.setState({
+      showtimes: showtimes,
+    })
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log('NO SUBMIT FOR YOU!');
+
+    // validate the input
+  }
+
   render() {
     return (
       <div className='movie-block'>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <div className='row mb-4'>
             <div className='col col-9'>
               <div className='form-row'>
                 <div className='form-group col'>
                   <label htmlFor='title'>Title</label>
-                  <input type='text'
+                  <input
+                    type='text'
                     id='title'
                     name='title'
                     className='form-control'
@@ -83,7 +143,8 @@ class MovieInfo extends React.Component {
                 </div>
                 <div className='form-group col'>
                   <label htmlFor='rating'>Rating</label>
-                  <select id='rating'
+                  <select
+                    id='rating'
                     className='form-control'
                     checked={this.state.rating}
                     onChange={this.handleChange}
@@ -97,7 +158,8 @@ class MovieInfo extends React.Component {
                 </div>
                 <div className='form-group col'>
                   <label htmlFor='runtime'>Runtime</label>
-                  <input type='text'
+                  <input
+                    type='text'
                     id='runtime'
                     name='runtime'
                     className='form-control'
@@ -110,37 +172,55 @@ class MovieInfo extends React.Component {
               <div className='form-group row'>
                 <label htmlFor='start_date' className='col-auto col-form-label'>Start Date</label>
                 <div className='col-auto'>
-                  <DatePicker id='start_date'
+                  <DatePicker
+                    id='start_date'
                     name='start_date'
                     className='form-control'
                     dateFormat='MM/DD/YYYY'
+<<<<<<< HEAD:src/components/admin.jsx
                     selected={moment(this.m.start_date)}
                     onChange={this.handleChange}
+=======
+                    selected={this.state.start_date}
+                    onChange={(date) => this.handleChangeNamed('start_date', date)}
+>>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
                   />
                 </div>
                 <label htmlFor='end_date' className='col-auto col-form-label'>End Date</label>
                 <div className='col-auto'>
-                  <DatePicker id='end_date'
+                  <DatePicker
+                    id='end_date'
                     name='end_date'
                     className='form-control'
                     dateFormat='MM/DD/YYYY'
+<<<<<<< HEAD:src/components/admin.jsx
                     selected={moment(this.m.end_date)}
                     onChange={this.handleChange}
+=======
+                    selected={this.state.end_date}
+                    onChange={(date) => this.handleChangeNamed('end_date', date)}
+>>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
                   />
                 </div>
               </div>
               {this.state.showtimes.map((day, i) => {
-                console.log(day);
                 return (
                   <div key={i} className='form-group row'>
+<<<<<<< HEAD:src/components/admin.jsx
                     <label className='col-md-2 col-form-label'>{day.date}</label>
                     <div className='col-md-10'>
                       <input type='text'
                         name={day.date}
+=======
+                    <label className='col-md-3 col-form-label'>{day.date.format('dddd (MM/DD)')}</label>
+                    <div className='col-md-9'>
+                      <input
+                        type='text'
+>>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
                         className='form-control'
                         placeholder=''
                         value={day.times}
-                        onChange={this.handleChange}
+                        onChange={(event) => this.handleChangeShowtimes(event, i)}
                       />
                     </div>
                   </div>
@@ -150,7 +230,7 @@ class MovieInfo extends React.Component {
             <div className='col col-3'>
               <div>Poster</div>
               <div className='card'>
-                <img className='card-img-top' src={this.m.poster}/>
+                <img className='card-img-top' src={this.props.poster}/>
                 <div className='card-body'>
                   <a href='#' className='btn btn-primary'>Change</a>
                 </div>
@@ -194,6 +274,8 @@ function Movies() {
                 rating={movie.rating}
                 runtime={movie.runtime}
                 showtimes={movie.showtimes}
+                start_date={movie.start_date}
+                end_date={movie.end_date}
               />
             );
           })}
@@ -206,7 +288,7 @@ export function Admin(props) {
   return (
     <React.Fragment>
       <Header />
-      <div className='row no-gutters' style={{'height': '100%'}}>
+      <div className='row no-gutters' style={{'min-height': '100%'}}>
         <div className='col col-2'>
           <Menu />
         </div>

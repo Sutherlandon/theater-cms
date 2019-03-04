@@ -1,4 +1,4 @@
-var db = {
+const db = {
   "movies": [{
     "title" : "Sing",
     "poster": "img/sing.jpg",
@@ -300,3 +300,5 @@ var db2 = {
       }]
     }]
   };
+
+module.exports = db;

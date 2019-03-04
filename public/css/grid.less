@@ -312,7 +312,7 @@ header {
   display: block;
   background-image: linear-gradient(to bottom, @grad-blue, @grad-purple);
   border-radius: 5px;
-  color: @primary-light;
+  color: @primary-light !important;
   cursor: pointer;
   margin: -1em auto 0;
 
@@ -329,14 +329,14 @@ header {
   grid-row-gap: 1em;
   padding: 0 1em 3em;
   grid-template-areas: "title title"
-                       "desc desc"
-                       "2D 3D";
+                       "2D 3D"
+                       "desc desc";
 
   @media(max-width: @sm-screen) {
     grid-template-areas: "title"
-                         "desc"
                          "2D"
-                         "3D";
+                         "3D"
+                         "desc";
     .D2 { margin: auto; }
     .D3 { margin: auto; }
   }
@@ -348,7 +348,7 @@ header {
   .info-desc {
     grid-area: desc;
     margin: auto;
-    max-width: 550px;
+    max-width: 60em;
     text-align: center;
   }
 
