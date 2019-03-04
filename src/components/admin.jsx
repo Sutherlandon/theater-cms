@@ -19,7 +19,13 @@ function Header() {
 function Menu() {
   return (
     <nav className="nav flex-column nav-pills">
-      <a className="nav-link active" href="#">Movies</a>
+      <a className="nav-link dropdown-toggle" href="#" data-toggle='dropdown' role='button'>Movies</a>
+      <div className='dropdown-menu'>
+        <a className='dropdown-item' href='#'>Sing</a>
+        <a className='dropdown-item' href='#'>Star Wars</a>
+        <a className='dropdown-item' href='#'>Passengers</a>
+        <a className='dropdown-item' href='#'>Assassins Creed</a>
+      </div>
       <a className="nav-link" href="#">About</a>
     </nav>
   )
