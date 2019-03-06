@@ -4,35 +4,18 @@
  */
 
 // import required packages
-const express = require('express');
-const path = require('path');
-const imdb = require('imdb-api');
-const loki = require('lokijs');
 const Hapi = require('hapi');
 
-const test_data = require('./test_data.js');
-const config = require('./config.js');
+const userRoutes = require('./routes/user.routes');
+const db = require('./utils/database');
+
+//const imdb = require('imdb-api');
+const config = require('../src/config.js');
 
 // build the environment
 const env = config.dev;
 
-// build the database
-const db = new loki('db.json', {
-  autoload: true,
-  autoloadCallback : () => {
-    // load test data
-    let movies = db.getCollection('movies');
-    if (movies === null) {
-      movies = db.addCollection('movies');
-      test_data.movies.forEach(movie => movies.insert(movie));
-    }
-  },
-  autosave: true,
-  autosaveInterval: 4000
-});
-
-
-// build an api with hap
+// build an api with hapi
 var server = Hapi.server({
   host: env.base_url,
   port: env.api_port,
@@ -41,10 +24,27 @@ var server = Hapi.server({
   }
 });
 
+server.register(require('hapi-auth-jwt'), (err) => {
+  // give the stategy both name and scheme of 'jwt'
+  server.auth.strategy('jwt', 'jwt', {
+    key: env.secret,
+    verifyOptions: { algorithms: ['HS256'] },
+  });
+
+  server.route('api/')
+});
+
 const init = async () => {
-  await server.start();
+  await server.start((err) => {
+    if (err) {
+      throw err;
+    }
+  });
+
   console.log(`Server running at: ${server.info.uri}`);
 }
+
+server.route(userRoutes);
 
 server.route({
   method: 'GET',
