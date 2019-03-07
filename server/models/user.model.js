@@ -1,23 +1,24 @@
 const Joi = require('joi');
+const util = require('util');
 const db = require('../utils/database');
 
-class User {
-  constructor() {
-    this.collection = db.getCollection('users');
-    this.schema = Joi.object().keys({
-      username: Joi.string().required(),
-      password: Joi.string().required(),
-    });
-  }
+let Users = db.getCollection('users');
 
-  insert(records) {
-    return this.collection.insert(records);
-  }
-
-  validate(user, callback) {
-    // TODO: check that the user name is uique
-    this.schema.validate(user, callback);
-  }
+// load test data
+if (Users === null) {
+  Users = db.addCollection('users');
+  [
+    {username: 'landon', password: 'hello'},
+    {username: 'liese', password: 'world'},
+  ].forEach(user => Users.insert(user));
 }
 
-module.exports = User;
+// define the schema for User object
+Users.schema = Joi.object().keys({
+  username: Joi.string().required(),
+  password: Joi.string().required(),
+});
+
+Users.validate = util.promisify(Users.schema.validate);
+
+module.exports = Users;

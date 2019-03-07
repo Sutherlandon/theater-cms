@@ -7,7 +7,7 @@
 const Hapi = require('hapi');
 
 const userRoutes = require('./routes/user.routes');
-const db = require('./utils/database');
+const movieRoutes = require('./routes/movie.routes');
 
 //const imdb = require('imdb-api');
 const config = require('../src/config.js');
@@ -15,26 +15,42 @@ const config = require('../src/config.js');
 // build the environment
 const env = config.dev;
 
-// build an api with hapi
-var server = Hapi.server({
-  host: env.base_url,
-  port: env.api_port,
-  routes: {
-    cors: true
-  }
-});
+// bring your own validation function?
+const validate = async (decoded, request) => {
+  let isValie = true;
 
-server.register(require('hapi-auth-jwt'), (err) => {
+  // do your checks here
+
+  return { isValid };
+}
+
+// initialize the server
+const init = async () => {
+  // build an api with hapi
+  const server = Hapi.server({
+    host: env.base_url,
+    port: env.api_port,
+    routes: {
+      cors: true
+    }
+  });
+
+  // register the auth plugin and wrap the user routes with them
+  await server.register(require('hapi-auth-jwt2'));
+
   // give the stategy both name and scheme of 'jwt'
   server.auth.strategy('jwt', 'jwt', {
     key: env.secret,
+    validate: validate,
     verifyOptions: { algorithms: ['HS256'] },
   });
 
-  server.route('api/')
-});
+  server.auth.default('jwt');
 
-const init = async () => {
+  // register routes
+  server.route(userRoutes);
+  server.route(movieRoutes);
+
   await server.start((err) => {
     if (err) {
       throw err;
@@ -44,17 +60,8 @@ const init = async () => {
   console.log(`Server running at: ${server.info.uri}`);
 }
 
-server.route(userRoutes);
-
-server.route({
-  method: 'GET',
-  path: '/movies',
-  handler: (request, h) => {
-    return h.response(db.getCollection('movies').find());
-  }
-});
-
-init();
+// fire it up!
+init().catch(err => console.log(err));
 
 
 
