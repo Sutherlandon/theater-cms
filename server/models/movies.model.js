@@ -20,6 +20,6 @@ Movies.schema = Joi.object().keys({
   showtimes: Joi.object(),
 });
 
-Movies.schema.validate = util.promisify(Movies.schema.validate);
+Movies.validate = util.promisify(Movies.schema.validate);
 
 module.exports = Movies;
