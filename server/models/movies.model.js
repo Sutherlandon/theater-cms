@@ -2,13 +2,11 @@ const Joi = require('joi');
 const util = require('util');
 const db = require('../utils/database');
 
-// load test data
-const test_data = require('../test_data.js');
-
 let Movies = db.getCollection('movies');
 
 // load test data
 if (Movies === null) {
+  const test_data = require('../test_data.js');
   Movies = db.addCollection('movies');
   test_data.movies.forEach(movie => Movies.insert(movie));
 }
