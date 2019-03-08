@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import {
   Footer,
   Header,
   MovieGrid,
-  SectionTitle,
   TheaterInfo,
   TicketInfo,
 } from '../components';

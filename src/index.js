@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-scroll'
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { Admin } from './pages/admin';
