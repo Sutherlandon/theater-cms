@@ -2,7 +2,7 @@ const Movies = require('../models/movies.model');
 
 const movieRoutes = [{
   method: 'GET',
-  path: '/movies',
+  path: '/api/movies',
   config: {
     auth: false,
   },

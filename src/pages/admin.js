@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import axios from 'axios';
+import config from '../config';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -58,8 +60,8 @@ class MovieInfo extends React.Component {
     let dates = [];
 
     // get the start and end days of the date range
-    let start = moment('start_date' == field ? value : this.state.start_date).startOf('day');
-    let end   = moment('end_date'   == field ? value : this.state.end_date).startOf('day');
+    let start = moment('start_date' === field ? value : this.state.start_date).startOf('day');
+    let end   = moment('end_date'   === field ? value : this.state.end_date).startOf('day');
 
     // enumerate the days
     do {
@@ -227,24 +229,50 @@ class MovieInfo extends React.Component {
   }
 }
 
-function Movies() {
-  const movies_styles = {
-    'backgroundColor': 'whitesmoke',
-    'boxSizing': 'border-box',
-    'height': '100%',
-    'padding': '1em'
+class Movies extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      movies: [],
+    }
   }
 
-  return (
-    <div style={movies_styles}>
-      <div className='page-title'>
-        <h2>Movies</h2>
-      </div>
-      <div className='content'>
-          {global.db2.movies.map((movie, i) => {
+  componentDidMount() {
+    axios({
+      method: 'get',
+      url: `http://${config.dev.base_url}:${config.dev.api_port}/api/movies`,
+    }).then(
+      result => {
+        console.log(result);
+        this.setState({ movies: result.data })
+      },
+      error => console.log(error),
+    );
+  }
+
+  componentDidUpdate() {
+    console.table(this.state);
+  }
+
+  render() {
+    const movies_styles = {
+      'backgroundColor': 'whitesmoke',
+      'boxSizing': 'border-box',
+      'height': '100%',
+      'padding': '1em'
+    }
+
+    return (
+      <div style={movies_styles}>
+        <div className='page-title'>
+          <h2>Movies</h2>
+        </div>
+        <div className='content'>
+          {this.state.movies.map((movie) => {
             return (
               <MovieInfo
-                key={i}
+                key={movie.title}
                 movie={movie}
                 title={movie.title}
                 poster={movie.poster}
@@ -256,27 +284,32 @@ function Movies() {
               />
             );
           })}
+        </div>
       </div>
-    </div>
-  )
+    );
+  }
 }
 
-export function Admin(props) {
-  return (
-    <React.Fragment>
-      <Header />
-      <div className='row no-gutters' style={{'min-height': '100%'}}>
-        <div className='col col-2'>
-          <Menu />
+class Admin extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Header />
+        <div className='row no-gutters' style={{'minHeight': '100%'}}>
+          <div className='col col-2'>
+            <Menu />
+          </div>
+          <div className='col'>
+            <BrowserRouter>
+              <Switch>
+                <Route path='/' component={Movies} />
+              </Switch>
+            </BrowserRouter>
+          </div>
         </div>
-        <div className='col'>
-          <BrowserRouter>
-            <Switch>
-              <Route path='/' component={Movies}/>
-            </Switch>
-          </BrowserRouter>
-        </div>
-      </div>
-    </React.Fragment>
-  )
+      </React.Fragment>
+    );
+  }
 }
+
+export { Admin };

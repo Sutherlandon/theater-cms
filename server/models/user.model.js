@@ -19,6 +19,7 @@ Users.schema = Joi.object().keys({
   password: Joi.string().required(),
 });
 
+// validates a User object with a promise
 Users.validate = util.promisify(Users.schema.validate);
 
 module.exports = Users;

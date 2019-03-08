@@ -1,4 +1,4 @@
-const Users = require('../models/user.model');
+const Users = require('../models/user.model').default;
 const util = require('util');
 
 /**
@@ -17,7 +17,7 @@ const hashPassword = util.promisify((password, callback) => {
 
 const userRoutes = [{
   method: 'GET',
-  path: '/users',
+  path: '/api/users',
   config: {
     auth: 'jwt',
   },
@@ -26,7 +26,7 @@ const userRoutes = [{
   }
 }, {
   method: 'POST',
-  path: '/users',
+  path: '/api/users',
   config: {
     auth: 'jwt',
   },
