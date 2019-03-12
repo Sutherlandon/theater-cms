@@ -1,6 +1,7 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import AdminPage from '../../../components/layout/admin_page';
+import Select from 'react-select';
 
 import moment from 'moment';
 import axios from 'axios';
@@ -13,18 +14,29 @@ class MovieInfo extends React.Component {
     super(props);
 
     this.state = {
-      title: props.title,
-      rating: props.rating,
-      runtime: props.runtime,
-      start_date: moment(props.start_date),
-      end_date: moment(props.end_date),
-      showtimes: [],
+      title: 'none',
     }
 
     this.handleChange = this.handleChange.bind(this);
     this.handleChangeShowtimes = this.handleChangeShowtimes.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeNamed = this.handleChangeNamed.bind(this);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.title !== nextProps.title) {
+      return {
+        title: nextProps.title,
+        rating: nextProps.rating,
+        runtime: nextProps.runtime,
+        start_date: moment(nextProps.start_date),
+        end_date: moment(nextProps.end_date),
+        showtimes: nextProps.showtimes || {}, 
+        poster: nextProps.poster,
+      }
+    }
+
+    return null;
   }
 
   componentDidMount() {
@@ -94,6 +106,24 @@ class MovieInfo extends React.Component {
   }
 
   render() {
+    const showtimes = Object.keys(this.state.showtimes).map((date, i) => {
+      const day = this.state.showtimes[date];
+      return (
+        <div key={i} className='form-group row'>
+          <label className='col-md-3 col-form-label'>{date}</label>
+          <div className='col-md-9'>
+            <input
+              type='text'
+              className='form-control'
+              placeholder=''
+              value={day.times}
+              onChange={(event) => this.handleChangeShowtimes(event, i)}
+            />
+          </div>
+        </div>
+      );
+    }, this);
+
     return (
       <div className='movie-block'>
         <form onSubmit={this.handleSubmit}>
@@ -164,38 +194,23 @@ class MovieInfo extends React.Component {
                   />
                 </div>
               </div>
-              {this.state.showtimes.map((day, i) => {
-                return (
-                  <div key={i} className='form-group row'>
-                    <label className='col-md-3 col-form-label'>{day.date.format('dddd (MM/DD)')}</label>
-                    <div className='col-md-9'>
-                      <input
-                        type='text'
-                        className='form-control'
-                        placeholder=''
-                        value={day.times}
-                        onChange={(event) => this.handleChangeShowtimes(event, i)}
-                      />
-                    </div>
-                  </div>
-                );
-              }, this)}
+              {showtimes}
+              <div className='row'>
+                <div className='col-auto mx-auto'>
+                  <button type='submit' className='btn btn-primary w-100' value='submit'>
+                    Save
+                  </button>
+                </div>
+              </div>
             </div>
             <div className='col col-3'>
               <div>Poster</div>
               <div className='card'>
-                <img className='card-img-top' src={this.props.poster} alt='movie poster' />
+                <img className='card-img-top' src={this.state.poster} alt='movie poster' />
                 <div className='card-body'>
                   <a href='#' className='btn btn-primary'>Change</a>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className='row'>
-            <div className='col col-9 mx-auto'>
-              <button type='submit' className='btn btn-primary w-100' value='submit'>
-                Save
-              </button>
             </div>
           </div>
         </form>
@@ -210,6 +225,7 @@ class Movies extends React.Component {
 
     this.state = {
       movies: [],
+      selected_movie: {},
     }
   }
 
@@ -220,7 +236,11 @@ class Movies extends React.Component {
     }).then(
       result => {
         console.log(result);
-        this.setState({ movies: result.data })
+        const movies = result.data.map(movie => ({ label: movie.title, value: movie }));
+        this.setState({
+          movies,
+          selected_movie: movies[0],
+        })
       },
       error => console.log(error),
     );
@@ -231,23 +251,33 @@ class Movies extends React.Component {
   }
 
   render() {
+    console.log('movies', this.state.movies);
+    console.log('selected', this.state.selected_movie);
+    let movie = {}
+    if (this.state.selected_movie !== {}) {
+      movie = this.state.selected_movie.value;
+    }
+
     return (
       <AdminPage title='Movies'>
-        {this.state.movies.map((movie, i) => {
-          return (
-            <MovieInfo
-              key={movie.title + i}
-              movie={movie}
-              title={movie.title}
-              poster={movie.poster}
-              rating={movie.rating}
-              runtime={movie.runtime}
-              showtimes={movie.showtimes}
-              start_date={movie.start_date}
-              end_date={movie.end_date}
-            />
-          );
-        })}
+        <Select
+          value={this.state.selected_movie}
+          onChange={(option) => this.setState({ selected_movie: option })}
+          options={this.state.movies}
+        />
+        {movie
+          ? <MovieInfo
+            movie={movie}
+            title={movie.title}
+            poster={movie.poster}
+            rating={movie.rating}
+            runtime={movie.runtime}
+            showtimes={movie.showtimes}
+            start_date={movie.start_date}
+            end_date={movie.end_date}
+          />
+          : null
+        }
       </AdminPage>
     );
   }
