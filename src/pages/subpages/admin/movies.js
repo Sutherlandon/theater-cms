@@ -7,8 +7,6 @@ import moment from 'moment';
 import axios from 'axios';
 import config from '../../../config';
 
-import 'react-datepicker/dist/react-datepicker.css';
-
 class MovieInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -25,13 +23,18 @@ class MovieInfo extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.title !== nextProps.title) {
+      const showtimes = Object.keys(nextProps.showtimes).map(date => ({
+        date: moment(date),
+        times: nextProps.showtimes[date] ? nextProps.showtimes[date].join(', ') : '',
+      }));
+
       return {
         title: nextProps.title,
         rating: nextProps.rating,
         runtime: nextProps.runtime,
-        start_date: moment(nextProps.start_date),
-        end_date: moment(nextProps.end_date),
-        showtimes: nextProps.showtimes || {}, 
+        start_date: moment(showtimes[0].date),
+        end_date: moment(showtimes[showtimes.length - 1].date),
+        showtimes,
         poster: nextProps.poster,
       }
     }
@@ -40,7 +43,7 @@ class MovieInfo extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
+    console.log('movies state', this.state);
   }
 
   enumerateDates(field, value) {
@@ -50,6 +53,9 @@ class MovieInfo extends React.Component {
     let start = moment('start_date' === field ? value : this.state.start_date).startOf('day');
     let end   = moment('end_date'   === field ? value : this.state.end_date).startOf('day');
 
+    // TODO: needs to decide how to handle showtimes that exist in the new date range instead
+    // of just wiping them out.
+
     // enumerate the days
     do {
       dates.push(start.clone());
@@ -58,7 +64,7 @@ class MovieInfo extends React.Component {
 
     this.setState({
       [field]: value,
-      showtimes: dates.map((date) => {return {date: date, times: ''}}),
+      showtimes: dates.map((date) => {return {date, times: ''}}),
     })
   }
 
@@ -93,97 +99,94 @@ class MovieInfo extends React.Component {
     const showtimes = [...this.state.showtimes];
     showtimes[i].times = event.target.value;
 
-    this.setState({
-      showtimes: showtimes,
-    })
+    this.setState({ showtimes });
   }
 
   handleSubmit(event) {
     event.preventDefault();
     console.log('NO SUBMIT FOR YOU!');
 
-    // validate the input
+    // TODO: need save only and publish option
+    // TODO: validate the input, yup is your friend!
   }
 
   render() {
-    const showtimes = Object.keys(this.state.showtimes).map((date, i) => {
-      const day = this.state.showtimes[date];
-      return (
-        <div key={i} className='form-group row'>
-          <label className='col-md-3 col-form-label'>{date}</label>
-          <div className='col-md-9'>
-            <input
-              type='text'
-              className='form-control'
-              placeholder=''
-              value={day.times}
-              onChange={(event) => this.handleChangeShowtimes(event, i)}
-            />
-          </div>
-        </div>
-      );
-    }, this);
-
     return (
       <div className='movie-block'>
         <form onSubmit={this.handleSubmit}>
+          <div className='row'>
+            <div className='col'>
+              <h3>Meta Data</h3>
+            </div>
+          </div>
           <div className='row mb-4'>
-            <div className='col col-9'>
-              <div className='form-row'>
-                <div className='form-group col'>
-                  <label htmlFor='title'>Title</label>
-                  <input
-                    type='text'
-                    id='title'
-                    name='title'
-                    className='form-control'
-                    placeholder='Movie Title'
-                    value={this.state.title}
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <div className='form-group col'>
-                  <label htmlFor='rating'>Rating</label>
-                  <select
-                    id='rating'
-                    className='form-control'
-                    checked={this.state.rating}
-                    onChange={this.handleChange}
-                    >
-                    <option value='G'>G</option>
-                    <option value='PG'>PG</option>
-                    <option value='PG-13'>PG-13</option>
-                    <option value='R'>R</option>
-                    <option value='NC-17'>NC-17</option>
-                  </select>
-                </div>
-                <div className='form-group col'>
-                  <label htmlFor='runtime'>Runtime</label>
-                  <input
-                    type='text'
-                    id='runtime'
-                    name='runtime'
-                    className='form-control'
-                    placeholder='ie. 2:35'
-                    value={this.state.runtime}
-                    onChange={this.handleChange}
-                  />
-                </div>
+            <div className='col col-2'>
+              <div>Poster</div>
+              <div className='card'>
+                <img className='card-img-top' src={this.state.poster} alt='movie poster'/>
               </div>
-              <div className='form-group row'>
-                <label htmlFor='start_date' className='col-auto col-form-label'>Start Date</label>
-                <div className='col-auto'>
-                  <DatePicker
-                    id='start_date'
-                    name='start_date'
-                    className='form-control'
-                    dateFormat='MM/DD/YYYY'
-                    selected={this.state.start_date}
-                    onChange={(date) => this.handleChangeNamed('start_date', date)}
-                  />
+            </div>
+            <div className='col'>
+              <div className='form-group'>
+                <label htmlFor='title'>Title</label>
+                <input
+                  type='text'
+                  id='title'
+                  name='title'
+                  className='form-control w-auto'
+                  placeholder='Movie Title'
+                  value={this.state.title}
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className='form-group'>
+                <label htmlFor='rating'>Rating</label>
+                <select
+                  id='rating'
+                  className='form-control w-auto'
+                  checked={this.state.rating}
+                  onChange={this.handleChange}
+                  >
+                  <option value='G'>G</option>
+                  <option value='PG'>PG</option>
+                  <option value='PG-13'>PG-13</option>
+                  <option value='R'>R</option>
+                  <option value='NC-17'>NC-17</option>
+                </select>
+              </div>
+              <div className='form-group'>
+                <label htmlFor='runtime'>Runtime</label>
+                <input
+                  type='text'
+                  id='runtime'
+                  name='runtime'
+                  className='form-control w-auto'
+                  placeholder='ie. 2h 35m'
+                  value={this.state.runtime}
+                  onChange={this.handleChange}
+                />
+              </div>
+              <div className='form-row'>
+                <div className='form-group col-auto'>
+                  <label htmlFor='start_date'>Start Date</label>
+                  <div className=''>
+                    <DatePicker
+                      id='start_date'
+                      name='start_date'
+                      className='form-control'
+                      dateFormat='MM/DD/YYYY'
+                      selected={this.state.start_date}
+                      onChange={(date) => this.handleChangeNamed('start_date', date)}
+                    />
+                  </div>
                 </div>
-                <label htmlFor='end_date' className='col-auto col-form-label'>End Date</label>
-                <div className='col-auto'>
+                <div className='col-auto' style={{
+                  alignSelf: 'flex-end',
+                  paddingBottom: '20px',
+                  fontSize: '25px',
+                }}>></div>
+                <div className='form-group col-auto'>
+                  <label htmlFor='end_date'>End Date</label>
                   <DatePicker
                     id='end_date'
                     name='end_date'
@@ -194,21 +197,33 @@ class MovieInfo extends React.Component {
                   />
                 </div>
               </div>
-              {showtimes}
+            </div>
+          </div>
+          <div className='row'>
+            <div className='col'>
+              <h3>Showtimes</h3>
+              {this.state.showtimes.map(({ date, times },  i) => {
+                return (
+                  <div key={i} className='form-group row'>
+                    <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>{date.format('dddd MM/DD')}</label>
+                    <div className='col'>
+                      <input
+                        type='text'
+                        className='form-control'
+                        placeholder=''
+                        value={times}
+                        onChange={(event) => this.handleChangeShowtimes(event, i)}
+                      />
+                    </div>
+                  </div>
+                );
+              }, this)}
               <div className='row'>
-                <div className='col-auto mx-auto'>
+                <div className='col-2'></div>
+                <div className='col-3'>
                   <button type='submit' className='btn btn-primary w-100' value='submit'>
                     Save
                   </button>
-                </div>
-              </div>
-            </div>
-            <div className='col col-3'>
-              <div>Poster</div>
-              <div className='card'>
-                <img className='card-img-top' src={this.state.poster} alt='movie poster' />
-                <div className='card-body'>
-                  <a href='#' className='btn btn-primary'>Change</a>
                 </div>
               </div>
             </div>
@@ -260,11 +275,16 @@ class Movies extends React.Component {
 
     return (
       <AdminPage title='Movies'>
-        <Select
-          value={this.state.selected_movie}
-          onChange={(option) => this.setState({ selected_movie: option })}
-          options={this.state.movies}
-        />
+        <div className='row pb-4 mb-4' style={{ borderBottom: 'solid 1px #DDD' }}>
+          <div className='col col-xs-12 col-xl-3'>
+            <Select
+              value={this.state.selected_movie}
+              onChange={(option) => this.setState({ selected_movie: option })}
+              options={this.state.movies}
+              className='form-group-auto'
+            />
+          </div>
+        </div>
         {movie
           ? <MovieInfo
             movie={movie}

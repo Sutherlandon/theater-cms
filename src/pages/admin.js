@@ -14,15 +14,20 @@ function Header() {
 
 function Menu() {
   return (
-    <nav className="nav flex-column nav-pills">
-      <a className="nav-link dropdown-toggle" href="#" data-toggle='dropdown' role='button'>Movies</a>
-      <div className='dropdown-menu'>
-        <a className='dropdown-item' href='#'>Sing</a>
-        <a className='dropdown-item' href='#'>Star Wars</a>
-        <a className='dropdown-item' href='#'>Passengers</a>
-        <a className='dropdown-item' href='#'>Assassins Creed</a>
-      </div>
+    <nav className="nav flex-column">
+      <a className="nav-link" href="/admin">Movies</a>
       <a className="nav-link" href="#">About</a>
+      <style>{`
+        .nav-link {
+          color: whitesmoke;
+          border-bottom: solid 1px #555;
+          border-radius: 0px;
+        }
+        .nav-link:hover {
+          color: #212529;
+          background-color: whitesmoke;
+        }
+      `}</style>
     </nav>
   )
 }
