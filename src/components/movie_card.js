@@ -4,6 +4,11 @@ import React from 'react';
  *
  */
 const MovieCard = (props) => {
+  if (!props.showtimes) {
+    return null;
+  }
+
+  console.log(props);
   const rating_class = "rating " + props.rating;
   const showtimes = props.showtimes.map((time, i) => {
     return (

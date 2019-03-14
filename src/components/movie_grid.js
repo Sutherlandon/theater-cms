@@ -13,7 +13,7 @@ class MovieGrid extends React.Component {
     super(props);
     this.state = {
       collapsed: '',
-      current_date: 'Friday 1/06',
+      current_date: '1/04/2019',
       movies: [],
     };
   }
@@ -73,7 +73,7 @@ class MovieGrid extends React.Component {
             return (
               <MovieCard
                 key={i}
-                titel={movie.title}
+                title={movie.title}
                 poster={movie.poster}
                 rating={movie.rating}
                 runtime={movie.runtime}
