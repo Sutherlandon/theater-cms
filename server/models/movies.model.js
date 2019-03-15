@@ -4,20 +4,13 @@ const db = require('../utils/database');
 
 let Movies = db.getCollection('movies');
 
-// load test data
-if (Movies === null) {
-  const test_data = require('../test_data.js');
-  Movies = db.addCollection('movies');
-  test_data.movies.forEach(movie => Movies.insert(movie));
-}
-
 // define the schema for a movie object
 Movies.schema = Joi.object().keys({
   title: Joi.string().required(),
   poster: Joi.string().required(),
   rating: Joi.string().required(),
   runtime: Joi.string().required(),
-  showtimes: Joi.object(),
+  showtimes: Joi.array(),
 });
 
 // validates a Movie object with a promise

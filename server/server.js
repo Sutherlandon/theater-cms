@@ -6,9 +6,6 @@
 // import required packages
 const Hapi = require('hapi');
 
-const userRoutes = require('./routes/user.routes');
-const movieRoutes = require('./routes/movie.routes');
-
 //const imdb = require('imdb-api');
 const config = require('../src/config.js');
 
@@ -35,6 +32,7 @@ const init = async () => {
     }
   });
 
+
   // register the auth plugin and wrap the user routes with them
   await server.register(require('hapi-auth-jwt2'));
 
@@ -48,8 +46,8 @@ const init = async () => {
   server.auth.default('jwt');
 
   // register routes
-  server.route(userRoutes);
-  server.route(movieRoutes);
+  server.route(require('./routes/user.routes'));
+  server.route(require('./routes/movie.routes'));
 
   await server.start((err) => {
     if (err) {

@@ -300,4 +300,4 @@ var db2 = {
     }]
   };
 
-module.exports = db;
+module.exports = db2;

@@ -1,4 +1,5 @@
 const Movies = require('../models/movies.model');
+//const db = require('../utils/database');
 
 const movieRoutes = [{
   method: 'GET',
