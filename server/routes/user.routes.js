@@ -1,4 +1,4 @@
-const Users = require('../models/user.model').default;
+const Users = require('../models/user.model');
 const util = require('util');
 
 /**

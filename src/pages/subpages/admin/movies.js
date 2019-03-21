@@ -23,18 +23,13 @@ class MovieInfo extends React.Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.title !== nextProps.title) {
-      const showtimes = Object.keys(nextProps.showtimes).map(date => ({
-        date: moment(date),
-        times: nextProps.showtimes[date] ? nextProps.showtimes[date].join(', ') : '',
-      }));
-
       return {
         title: nextProps.title,
         rating: nextProps.rating,
         runtime: nextProps.runtime,
-        start_date: moment(showtimes[0].date),
-        end_date: moment(showtimes[showtimes.length - 1].date),
-        showtimes,
+        start_date: moment(nextProps.start_date),
+        end_date: moment(nextProps.end_date),
+        showtimes: nextProps.showtimes,
         poster: nextProps.poster,
       }
     }
@@ -202,10 +197,10 @@ class MovieInfo extends React.Component {
           <div className='row'>
             <div className='col'>
               <h3>Showtimes</h3>
-              {this.state.showtimes.map(({ date, times },  i) => {
+              {this.state.showtimes.map(({ date: day, times },  i) => {
                 return (
                   <div key={i} className='form-group row'>
-                    <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>{date.format('dddd MM/DD')}</label>
+                    <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>{day}</label>
                     <div className='col'>
                       <input
                         type='text'

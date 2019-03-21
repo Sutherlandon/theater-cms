@@ -1,7 +1,8 @@
-const loki = require('lokijs');
-const test_data = require('../test_data.js');
+const Loki = require('lokijs');
+const util = require('util');
 
 // create the database object
+/*
 const db = new loki('theater.db', {
   autoload: true,
   autoloadCallback: () => {
@@ -33,5 +34,10 @@ const db = new loki('theater.db', {
   autosave: true,
   autosaveInterval: 4000
 });
+*/
+
+const db = new Loki('theater.db');
+
+db.loadDatabase = util.promisify(db.loadDatabase);
 
 module.exports = db;

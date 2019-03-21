@@ -8,9 +8,9 @@ const MovieCard = (props) => {
     return null;
   }
 
-  console.log(props);
+  console.log('movie card', props);
   const rating_class = "rating " + props.rating;
-  const showtimes = props.showtimes.map((time, i) => {
+  const showtimes = props.showtimes.split(', ').map((time, i) => {
     return (
       <span key={i}>{time}</span>
     )

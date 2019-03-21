@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import config from '../config';
 
 import SelectBox from './select_box';
@@ -60,6 +61,8 @@ class MovieGrid extends React.Component {
   }
 
   render(props) {
+    console.log(moment(this.state.current_date).day());
+    
     return (
       <React.Fragment>
         <SelectBox
@@ -77,7 +80,7 @@ class MovieGrid extends React.Component {
                 poster={movie.poster}
                 rating={movie.rating}
                 runtime={movie.runtime}
-                showtimes={movie.showtimes[this.state.current_date]}
+                showtimes={movie.showtimes[moment(this.state.current_date).day()].times}
               />
             );
           })}
