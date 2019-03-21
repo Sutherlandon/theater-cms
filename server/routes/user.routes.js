@@ -19,7 +19,7 @@ const userRoutes = [{
   method: 'GET',
   path: '/api/users',
   config: {
-    auth: 'jwt',
+    auth: false,
   },
   handler: (request, h) => {
     return h.response(Users.find()); //.header('Authorization', request.headers.authorization)

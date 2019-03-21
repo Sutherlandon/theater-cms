@@ -1,11 +1,11 @@
 import React from 'react';
 import DatePicker from 'react-datepicker';
-import AdminPage from '../../../components/layout/admin_page';
+import AdminPage from './layout/admin_page';
 import Select from 'react-select';
 
 import moment from 'moment';
 import axios from 'axios';
-import config from '../../../config';
+import config from '../config';
 
 class MovieInfo extends React.Component {
   constructor(props) {

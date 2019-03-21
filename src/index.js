@@ -9,7 +9,7 @@ ReactDOM.render((
   <BrowserRouter>
     <Switch>
       <Route exact path='/' component={Home}/>
-      <Route exact path='/admin' component={Admin}/>
+      <Route path='/admin' component={Admin}/>
     </Switch>
   </BrowserRouter>
 ), document.getElementById("root"));

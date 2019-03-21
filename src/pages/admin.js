@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Movies from './subpages/admin/movies';
+import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
+import Movies from './movies';
+import Users from './users';
 
 function Header() {
   return (
@@ -17,6 +18,7 @@ function Menu() {
     <nav className="nav flex-column">
       <a className="nav-link" href="/admin">Movies</a>
       <a className="nav-link" href="#">About</a>
+      <a className="nav-link" href="#">Users</a>
       <style>{`
         .nav-link {
           color: whitesmoke;
@@ -44,7 +46,9 @@ class Admin extends React.Component {
           <div className='col'>
             <BrowserRouter>
               <Switch>
-                <Route path='/' component={Movies} />
+                <Route path='/admin/movies' component={Movies} />
+                <Route path='/admin/users' component={Users} />
+                <Redirect to='/admin/movies' />
               </Switch>
             </BrowserRouter>
           </div>

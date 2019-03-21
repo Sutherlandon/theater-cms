@@ -26,7 +26,7 @@ const validate = async (decoded, request) => {
 const init = async () => {
   // load the database, if it's the first time load it with test data
   try {
-    await db.loadDatabase({})
+    await db.loadDatabase({});
 
     // load test data
     let Movies = db.getCollection('movies');
