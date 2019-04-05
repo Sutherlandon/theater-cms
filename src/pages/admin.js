@@ -39,15 +39,9 @@ class MovieInfo extends React.Component {
       title: props.title,
       rating: props.rating,
       runtime: props.runtime,
-<<<<<<< HEAD:src/components/admin.jsx
-      start_date: props.start_date,
-      start_date: props.end_date,
-      showtimes: [...props.showtimes],
-=======
       start_date: moment(props.start_date),
       end_date: moment(props.end_date),
       showtimes: [],
->>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -177,13 +171,8 @@ class MovieInfo extends React.Component {
                     name='start_date'
                     className='form-control'
                     dateFormat='MM/DD/YYYY'
-<<<<<<< HEAD:src/components/admin.jsx
-                    selected={moment(this.m.start_date)}
-                    onChange={this.handleChange}
-=======
                     selected={this.state.start_date}
                     onChange={(date) => this.handleChangeNamed('start_date', date)}
->>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
                   />
                 </div>
                 <label htmlFor='end_date' className='col-auto col-form-label'>End Date</label>
@@ -193,30 +182,18 @@ class MovieInfo extends React.Component {
                     name='end_date'
                     className='form-control'
                     dateFormat='MM/DD/YYYY'
-<<<<<<< HEAD:src/components/admin.jsx
-                    selected={moment(this.m.end_date)}
-                    onChange={this.handleChange}
-=======
                     selected={this.state.end_date}
                     onChange={(date) => this.handleChangeNamed('end_date', date)}
->>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
                   />
                 </div>
               </div>
               {this.state.showtimes.map((day, i) => {
                 return (
                   <div key={i} className='form-group row'>
-<<<<<<< HEAD:src/components/admin.jsx
-                    <label className='col-md-2 col-form-label'>{day.date}</label>
-                    <div className='col-md-10'>
-                      <input type='text'
-                        name={day.date}
-=======
                     <label className='col-md-3 col-form-label'>{day.date.format('dddd (MM/DD)')}</label>
                     <div className='col-md-9'>
                       <input
                         type='text'
->>>>>>> 7e9c51710c672064a9992d2381590f30461a389d:src/pages/admin.js
                         className='form-control'
                         placeholder=''
                         value={day.times}
