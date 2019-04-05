@@ -1,10 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import moment from 'moment';
-import config from '../config';
+import config from '../api/config';
 
 import SelectBox from './select_box';
 import MovieCard from './movie_card';
+
+import MovieAPI from '../api/movie_api';
 
 /**
  *
@@ -20,10 +22,7 @@ class MovieGrid extends React.Component {
   }
 
   componentDidMount() {
-    axios({
-      method: 'get',
-      url: `http://${config.dev.base_url}:${config.dev.api_port}/api/movies`,
-    })
+    MovieAPI.get()
     //Promise.resolve(global.db.movies)
     .then(
       (result) => {

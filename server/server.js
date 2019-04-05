@@ -7,11 +7,8 @@
 const Hapi = require('hapi');
 
 //const imdb = require('imdb-api');
-const config = require('../src/config.js');
+const config = require('./config.js');
 const db = require('./utils/database');
-
-// build the environment
-const env = config.dev;
 
 // bring your own validation function?
 const validate = async (decoded, request) => {
@@ -57,8 +54,8 @@ const init = async () => {
 
   // build an api with hapi
   const server = Hapi.server({
-    host: env.base_url,
-    port: env.api_port,
+    host: config.hostname,
+    port: config.api_port,
     routes: {
       cors: true
     }
@@ -69,7 +66,7 @@ const init = async () => {
 
   // give the stategy both name and scheme of 'jwt'
   server.auth.strategy('jwt', 'jwt', {
-    key: env.secret,
+    key: config.secret,
     validate: validate,
     verifyOptions: { algorithms: ['HS256'] },
   });

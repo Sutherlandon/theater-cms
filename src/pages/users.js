@@ -1,10 +1,8 @@
 import React from 'react';
-import AdminPage from './layout/admin_page';
-
 import moment from 'moment';
-import axios from 'axios';
-import config from '../config';
 
+import AdminPage from './layout/admin_page';
+import UserAPI from '../api/user_api';
 
 class Users extends React.Component {
   constructor(props) {
@@ -16,11 +14,8 @@ class Users extends React.Component {
   }
 
   componentDidMount() {
-    axios({
-      method: 'get',
-      url: `http://${config.dev.api_path}/api/users`,
-    }).then(
-      result => {
+    UserAPI.get().then(
+      (result) => {
         console.log(result);
         this.setState({
           users: result.data.map(({username, meta}) => ({
