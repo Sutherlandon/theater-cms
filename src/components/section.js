@@ -1,5 +1,5 @@
 import React from 'react';
-import SectionTitle from '../section_title';
+import SectionTitle from './section_title';
 
 const Section = (props) => (
   <div className='section' style={{

@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import moment from 'moment';
 import config from '../config';
 
 import SelectBox from './select_box';
@@ -13,7 +14,7 @@ class MovieGrid extends React.Component {
     super(props);
     this.state = {
       collapsed: '',
-      current_date: 'Friday 1/06',
+      current_date: '1/04/2019',
       movies: [],
     };
   }
@@ -21,8 +22,7 @@ class MovieGrid extends React.Component {
   componentDidMount() {
     axios({
       method: 'get',
-      //url: 'http://localhost:3001/movies',
-      url: `http://${config.dev.base_url}:${config.dev.api_port}/movies`,
+      url: `http://${config.dev.base_url}:${config.dev.api_port}/api/movies`,
     })
     //Promise.resolve(global.db.movies)
     .then(
@@ -61,6 +61,8 @@ class MovieGrid extends React.Component {
   }
 
   render(props) {
+    console.log(moment(this.state.current_date).day());
+    
     return (
       <React.Fragment>
         <SelectBox
@@ -74,11 +76,11 @@ class MovieGrid extends React.Component {
             return (
               <MovieCard
                 key={i}
-                titel={movie.title}
+                title={movie.title}
                 poster={movie.poster}
                 rating={movie.rating}
                 runtime={movie.runtime}
-                showtimes={movie.showtimes[this.state.current_date]}
+                showtimes={movie.showtimes[moment(this.state.current_date).day()].times}
               />
             );
           })}

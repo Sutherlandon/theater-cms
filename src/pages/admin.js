@@ -1,10 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import moment from 'moment';
-
-import 'react-datepicker/dist/react-datepicker.css';
+import { BrowserRouter, Switch, Redirect, Route } from 'react-router-dom';
+import Movies from './movies';
+import Users from './users';
 
 function Header() {
   return (
@@ -18,19 +15,26 @@ function Header() {
 
 function Menu() {
   return (
-    <nav className="nav flex-column nav-pills">
-      <a className="nav-link dropdown-toggle" href="#" data-toggle='dropdown' role='button'>Movies</a>
-      <div className='dropdown-menu'>
-        <a className='dropdown-item' href='#'>Sing</a>
-        <a className='dropdown-item' href='#'>Star Wars</a>
-        <a className='dropdown-item' href='#'>Passengers</a>
-        <a className='dropdown-item' href='#'>Assassins Creed</a>
-      </div>
+    <nav className="nav flex-column">
+      <a className="nav-link" href="/admin">Movies</a>
       <a className="nav-link" href="#">About</a>
+      <a className="nav-link" href="#">Users</a>
+      <style>{`
+        .nav-link {
+          color: whitesmoke;
+          border-bottom: solid 1px #555;
+          border-radius: 0px;
+        }
+        .nav-link:hover {
+          color: #212529;
+          background-color: whitesmoke;
+        }
+      `}</style>
     </nav>
   )
 }
 
+<<<<<<< HEAD
 class MovieInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -213,70 +217,30 @@ class MovieInfo extends React.Component {
                 </div>
               </div>
             </div>
+=======
+class Admin extends React.Component {
+  render() {
+    return (
+      <React.Fragment>
+        <Header />
+        <div className='row no-gutters' style={{'minHeight': '100%'}}>
+          <div className='col col-2'>
+            <Menu />
+>>>>>>> c4a43ba1c89695b91be67a6ecbc4f6c5968a8cee
           </div>
-          <div className='row'>
-            <div className='col col-9 mx-auto'>
-              <button type='submit' className='btn btn-primary w-100' value='submit'>
-                Save
-              </button>
-            </div>
+          <div className='col'>
+            <BrowserRouter>
+              <Switch>
+                <Route path='/admin/movies' component={Movies} />
+                <Route path='/admin/users' component={Users} />
+                <Redirect to='/admin/movies' />
+              </Switch>
+            </BrowserRouter>
           </div>
-        </form>
-      </div>
+        </div>
+      </React.Fragment>
     );
   }
 }
 
-function Movies() {
-  const movies_styles = {
-    'backgroundColor': 'whitesmoke',
-    'boxSizing': 'border-box',
-    'height': '100%',
-    'padding': '1em'
-  }
-
-  return (
-    <div style={movies_styles}>
-      <div className='page-title'>
-        <h2>Movies</h2>
-      </div>
-      <div className='content'>
-          {global.db2.movies.map((movie, i) => {
-            return (
-              <MovieInfo
-                key={i}
-                movie={movie}
-                title={movie.title}
-                poster={movie.poster}
-                rating={movie.rating}
-                runtime={movie.runtime}
-                showtimes={movie.showtimes}
-                start_date={movie.start_date}
-                end_date={movie.end_date}
-              />
-            );
-          })}
-      </div>
-    </div>
-  )
-}
-
-export function Admin(props) {
-  return (
-    <React.Fragment>
-      <Header />
-      <div className='row no-gutters' style={{'min-height': '100%'}}>
-        <div className='col col-2'>
-          <Menu />
-        </div>
-        <div className='col'>
-          <BrowserRouter>
-            <Switch>
-              <Route path='/' component={Movies}/>
-            </Switch>
-          </BrowserRouter>
-        </div>
-      </div>
-    </React.Fragment>
-  )
-}
+export { Admin };
