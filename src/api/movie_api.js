@@ -9,6 +9,13 @@ class MovieAPI {
     });
   }
 
+  static create() {
+    return axios({
+      method: 'post',
+      url: `${config.api_path}/movies`,
+    });
+  }
+
   static update(data) {
     return axios({
       method: 'put',

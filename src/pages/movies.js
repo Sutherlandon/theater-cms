@@ -33,6 +33,21 @@ class Movies extends React.Component {
     console.log(this.state);
   }
 
+  handleNewMovie = () => {
+    console.log('here');
+    this.setState({
+      selected_movie: {
+        title: '',
+        poster: '',
+        rating: '',
+        runtime: '',
+        showtimes: '',
+        start_date: '',
+        end_date: '',
+      },
+    });
+  }
+
   render() {
     console.log('movies', this.state.movies);
     console.log('selected', this.state.selected_movie);
@@ -53,14 +68,13 @@ class Movies extends React.Component {
             />
           </div>
           <div className='col col-xs-2 col-xl-3 pl-0'>
-            <button type='submit' className='btn btn-primary'>
+            <button onClick={this.handleNewMovie} type='submit' className='btn btn-primary'>
               New Movie
             </button>
           </div>
         </div>
         {movie
           ? <MovieForm
-            movie={movie}
             title={movie.title}
             poster={movie.poster}
             rating={movie.rating}
