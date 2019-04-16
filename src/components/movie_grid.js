@@ -1,7 +1,5 @@
 import React from 'react';
-import axios from 'axios';
 import moment from 'moment';
-import config from '../api/config';
 
 import SelectBox from './select_box';
 import MovieCard from './movie_card';

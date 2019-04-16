@@ -17,8 +17,8 @@ function Menu() {
   return (
     <nav className="nav flex-column">
       <a className="nav-link" href="/admin">Movies</a>
-      <a className="nav-link" href="#">About</a>
-      <a className="nav-link" href="#">Users</a>
+      <a className="nav-link" href="/">About</a>
+      <a className="nav-link" href="/">Users</a>
       <style>{`
         .nav-link {
           color: whitesmoke;
