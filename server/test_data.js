@@ -270,7 +270,7 @@ const db = {
 var db2 = {
   "movies": [{
     "title" : "Sing",
-    "poster": "img/sing.jpg",
+    "poster": "/img/sing.jpg",
     "rating" : "G",
     "runtime" : "2h 13m",
     "start_date" : '08/09/2018',
@@ -300,4 +300,24 @@ var db2 = {
     }]
   };
 
-module.exports = db2;
+var db3 = {
+  "movies": [{
+    "title" : "Sing",
+    "poster": "/img/sing.jpg",
+    "rating" : "G",
+    "runtime" : "2h 13m",
+    "start_date" : '08/09/2018',
+    "end_date": '08/22/2018',
+    "showtimes" : {
+        "Sunday": "12:45 2D, 3:45 2D, 5:45 3D, 6:45 3D, 9:45 3D",
+        "Monday": "12:45 2D, 3:45 2D, 5:45 3D, 6:45 3D, 9:45 3D",
+        "Tuesday": "12:45 2D, 3:45 2D, 5:45 3D, 6:45 3D, 9:45 3D",
+        "Wednesday": "12:45 2D, 3:45 2D, 5:45 3D, 6:45 3D, 9:45 3D",
+        "Thursday": "12:45 2D, 3:45 2D, 6:45 3D, 9:45 3D",
+        "Friday": "12:45 2D, 3:45 2D, 6:45 3D, 9:45 3D",
+        "Saturday": "12:45 2D, 3:45 2D, 6:45 3D, 9:45 3D",
+      }
+    }]
+  };
+
+module.exports = db3;

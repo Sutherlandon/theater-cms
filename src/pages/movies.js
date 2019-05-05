@@ -6,20 +6,38 @@ import moment from 'moment';
 import AdminPage from './layout/admin_page';
 import MovieAPI from '../api/movie_api'
 
+const blank_movie = {
+  label: 'New Movie',
+  value: {
+    title: '',
+    rating: 'G',
+    runtime: '',
+    showtimes: {
+      'Sunday': '',
+      'Monday': '',
+      'Tuesday': '',
+      'Wednesday': '',
+      'Thursday': '',
+      'Friday': '',
+      'Saturday': '',
+    },
+  }
+}
+
 class Movies extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       movies: [],
-      selected_movie: {},
+      selected_movie: blank_movie,
     }
   }
 
   componentDidMount() {
     MovieAPI.get()
       .then((result) => {
-        console.log(result);
+        //console.log(result);
         const movies = result.data.map(movie => {
           movie.start_date = moment(movie.start_date);
           movie.end_date = moment(movie.end_date);
@@ -52,7 +70,6 @@ class Movies extends React.Component {
     // enumerate the days
     do {
       dates.push(start.clone());
-      console.log(start.diff(end));
     } while (start.add(1, 'days').diff(end) < 1);
 
     this.setState({
@@ -62,7 +79,8 @@ class Movies extends React.Component {
   }
 
   handleChange = (event) => {
-    const name = event.target.name;
+    const field = event.target.name;
+
     let value;
     if (event.target.type === 'select') {
       value = event.target.selected;
@@ -70,13 +88,16 @@ class Movies extends React.Component {
       value = event.target.value;
     }
 
-    this.setState({
-      [name]: value
-    });
+    this.handleChangeNamed(field, value);
   }
 
   handleChangeNamed = (field, value) => {
+    const movie = {...this.state.selected_movie};
+    movie.value[field] = value;
+    this.setState({ selected_movie: movie });
+
     // if it is a date that is changing, enumerate the dates in between
+    /*
     if (['start_date', 'end_date'].includes(field)) {
       this.enumerateDates(field, value);
     }
@@ -86,19 +107,18 @@ class Movies extends React.Component {
         [field]: value
       })
     }
+    */
   }
 
-  handleChangeShowtimes = (event, i) => {
-    const showtimes = [...this.state.showtimes];
-    showtimes[i].times = event.target.value;
-
-    this.setState({ showtimes });
+  handleChangeShowtimes = (event, key) => {
+    const movie = {...this.state.selected_movie};
+    movie.value.showtimes[key] = event.target.value;
+    this.setState({ selected_movie: movie });
   }
 
 
   handleNewMovie = () => {
-    console.log('here');
-    this.setState({ selected_movie: {label: 'New Movie', value: {}} });
+    this.setState({ selected_movie: blank_movie });
   }
 
   handleSubmit = (event) => {
@@ -110,22 +130,8 @@ class Movies extends React.Component {
   }
 
   render() {
-    console.log('movies', this.state.movies);
-    console.log('selected', this.state.selected_movie);
-    let movie = this.state.selected_movie.value || {};
-
-    if (movie && !movie.showtimes) {
-      movie.showtimes = [
-        {'Sunday': ''},
-        {'Monday': ''},
-        {'Tuesday': ''},
-        {'Wednesday': ''},
-        {'Thursday': ''},
-        {'Friday': ''},
-        {'Saturday': ''},
-      ];
-    }
-
+    let movie = this.state.selected_movie.value;
+  
     return (
       <AdminPage title='Movies'>
         <div className='row pb-4 mb-4' style={{ borderBottom: 'solid 1px #DDD' }}>
@@ -154,7 +160,7 @@ class Movies extends React.Component {
               <div className='col col-2'>
                 <div>Poster</div>
                 <div className='card'>
-                  { movie.poster
+                  {movie.poster
                     ? <img className='card-img-top' src={movie.poster} alt='movie poster'/>
                     : <div className='dropzone' style={{
                       border: '4px dashed #DDD',
@@ -188,7 +194,7 @@ class Movies extends React.Component {
                     className='form-control w-auto'
                     checked={movie.rating}
                     onChange={this.handleChange}
-                    >
+                  >
                     <option value='G'>G</option>
                     <option value='PG'>PG</option>
                     <option value='PG-13'>PG-13</option>
@@ -244,19 +250,19 @@ class Movies extends React.Component {
             <div className='row'>
               <div className='col'>
                 <h3>Showtimes</h3>
-                {movie.showtimes.map(({ date: day, times },  i) => {
+                {Object.keys(movie.showtimes).map((key) => {
                   return (
-                    <div key={i} className='form-group row'>
+                    <div key={key} className='form-group row'>
                       <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>
-                        {day}
+                        {key}
                       </label>
                       <div className='col'>
                         <input
                           type='text'
                           className='form-control'
                           placeholder=''
-                          value={times}
-                          onChange={(event) => this.handleChangeShowtimes(event, i)}
+                          value={movie.showtimes[key]}
+                          onChange={(event) => this.handleChangeShowtimes(event, key)}
                         />
                       </div>
                     </div>

@@ -12,7 +12,7 @@ const db = require('./utils/database');
 
 // bring your own validation function?
 const validate = async (decoded, request) => {
-  let isValie = true;
+  let isValid = true;
 
   // do your checks here
 
@@ -30,7 +30,7 @@ const init = async () => {
     if (Movies === null) {
       console.log('loading test movies...');
       Movies = db.addCollection('movies');
-      require('../test_data.js').movies.forEach(movie => Movies.insert(movie)); 
+      require('./test_data.js').movies.forEach(movie => Movies.insert(movie)); 
     }
 
     let Users = db.getCollection('users');
