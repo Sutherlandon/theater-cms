@@ -2,6 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import isEmpty from 'lodash.isempty';
 
 import AdminPage from './layout/admin_page';
 import MovieAPI from '../api/movie_api'
@@ -12,15 +13,7 @@ const blank_movie = {
     title: '',
     rating: 'G',
     runtime: '',
-    showtimes: {
-      'Sunday': '',
-      'Monday': '',
-      'Tuesday': '',
-      'Wednesday': '',
-      'Thursday': '',
-      'Friday': '',
-      'Saturday': '',
-    },
+    showtimes: { },
   }
 }
 
@@ -131,9 +124,18 @@ class Movies extends React.Component {
 
   render() {
     let movie = this.state.selected_movie.value;
+
+    if (!movie) {
+      return (
+        <div className='row'>
+          Select a Movie to see it's info or click "New Movie" to created a one
+        </div>
+      )
+    }
   
     return (
       <AdminPage title='Movies'>
+        {/* Movie Selector */}
         <div className='row pb-4 mb-4' style={{ borderBottom: 'solid 1px #DDD' }}>
           <div className='col col-xs-10 col-xl-3'>
             <Select
@@ -149,6 +151,8 @@ class Movies extends React.Component {
             </button>
           </div>
         </div>
+
+        {/* Movie Form section */}
         <div className='movie-block'>
           <form onSubmit={this.handleSubmit}>
             <div className='row'>
@@ -157,8 +161,8 @@ class Movies extends React.Component {
               </div>
             </div>
             <div className='row mb-4'>
-              <div className='col col-2'>
-                <div>Poster</div>
+              <div className='col col-sm-3 col-12'>
+                <div className='mb-2'>Poster</div>
                 <div className='card'>
                   {movie.poster
                     ? <img className='card-img-top' src={movie.poster} alt='movie poster'/>
@@ -174,7 +178,7 @@ class Movies extends React.Component {
                   }
                 </div>
               </div>
-              <div className='col'>
+              <div className='col col-sm-9 col-12'>
                 <div className='form-group'>
                   <label htmlFor='title'>Title</label>
                   <input
@@ -247,14 +251,19 @@ class Movies extends React.Component {
                 </div>
               </div>
             </div>
-            <div className='row'>
+            <div className='row mb-4'>
               <div className='col'>
                 <h3>Showtimes</h3>
+                {isEmpty(movie.showtimes) ? (
+                  <div>
+                    Enter start and end dates (inclusive) to see showtimes
+                  </div>
+                ) : null}
                 {Object.keys(movie.showtimes).map((key) => {
                   return (
                     <div key={key} className='form-group row'>
                       <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>
-                        {key}
+                        {moment(key).format('dddd MM/DD')}
                       </label>
                       <div className='col'>
                         <input
@@ -268,14 +277,13 @@ class Movies extends React.Component {
                     </div>
                   );
                 }, this)}
-                <div className='row'>
-                  <div className='col-2'></div>
-                  <div className='col-3'>
-                    <button type='submit' className='btn btn-primary w-100' value='submit'>
-                      Save
-                    </button>
-                  </div>
-                </div>
+              </div>
+            </div>
+            <div className='row'>
+              <div className='col-3'>
+                <button type='submit' className='btn btn-primary w-100' value='submit'>
+                  Publish
+                </button>
               </div>
             </div>
           </form>

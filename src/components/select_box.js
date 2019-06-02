@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 /**
  * A select.
@@ -47,12 +48,14 @@ class SelectBox extends React.Component {
             id={this.id + "-select"}
             onClick={() => this.setState({open: !this.state.open})}
           >
-            {this.props.value}
+            {moment(this.props.value).format('dddd MM/DD')}
             <span className="caret"></span>
           </button>
           <ul className="select-options" style={{display: display}}>
             {this.props.options.map((date, i) => (
-              <li key={i} onClick={() => this.handleChange(date)}>{date}</li>
+              <li key={i} onClick={() => this.handleChange(date)}>
+                {moment(date).format('dddd MM/DD')}
+              </li>
             ))}
           </ul>
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import union from 'lodash.union';
 
 import SelectBox from './select_box';
 import MovieCard from './movie_card';
@@ -24,28 +25,22 @@ class MovieGrid extends React.Component {
     //Promise.resolve(global.db.movies)
     .then(
       (result) => {
-        console.log(result.data);
-        this.setState({ movies: result.data });
+        console.log('api data', result.data);
+        const movies = result.data;
+
+        let show_dates = [];
+        movies.forEach(movie => {
+          show_dates = union(show_dates, Object.keys(movie.showtimes));
+        });
+
+        this.setState({
+          current_date: show_dates[0],
+          movies,
+          show_dates,
+        });
       },
       (error) => ({error: 'No movies found.'}),
     )
-  }
-
-  /**
-   * Gets a list dates that movies are showing on
-   */
-  getShowdates() {
-    const showtimes = [];
-    this.state.movies.forEach(movie => {
-      Object.keys(movie.showtimes).forEach(day => {
-        // if the list does not contain the show day
-        if (showtimes.indexOf(day) === -1 ) {
-          showtimes.push(day);
-        }
-      });
-    });
-
-    return showtimes;
   }
 
   /**
@@ -58,13 +53,15 @@ class MovieGrid extends React.Component {
   }
 
   render(props) {
-    console.log(moment(this.state.current_date).day());
-    
+    if (!this.state.show_dates) {
+      return null;
+    }
+
     return (
       <React.Fragment>
         <SelectBox
           id='now-showing'
-          options={this.getShowdates()}
+          options={this.state.show_dates}
           onChange={(date) => this.setState({ current_date: date })}
           value={this.state.current_date}
         />
@@ -77,7 +74,7 @@ class MovieGrid extends React.Component {
                 poster={movie.poster}
                 rating={movie.rating}
                 runtime={movie.runtime}
-                showtimes={movie.showtimes[moment(this.state.current_date).day()].times}
+                showtimes={movie.showtimes[this.state.current_date]}
               />
             );
           })}
