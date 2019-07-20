@@ -161,7 +161,7 @@ class Movies extends React.Component {
               </div>
             </div>
             <div className='row mb-4'>
-              <div className='col col-sm-3 col-12'>
+              <div className='col col-auto h-100'>
                 <div className='mb-2'>Poster</div>
                 <div className='card'>
                   {movie.poster
@@ -178,7 +178,7 @@ class Movies extends React.Component {
                   }
                 </div>
               </div>
-              <div className='col col-sm-9 col-12'>
+              <div className='col'>
                 <div className='form-group'>
                   <label htmlFor='title'>Title</label>
                   <input
@@ -219,7 +219,7 @@ class Movies extends React.Component {
                   />
                 </div>
                 <div className='form-row'>
-                  <div className='form-group col-auto'>
+                  <div className='col-auto'>
                     <label htmlFor='start_date'>Start Date</label>
                     <div className=''>
                       <DatePicker
@@ -237,7 +237,7 @@ class Movies extends React.Component {
                     paddingBottom: '20px',
                     fontSize: '25px',
                   }}>></div>
-                  <div className='form-group col-auto'>
+                  <div className='col-auto'>
                     <label htmlFor='end_date'>End Date</label>
                     <DatePicker
                       id='end_date'
