@@ -4,10 +4,58 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import isEmpty from 'lodash.isempty';
 import * as yup from 'yup';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FieldArray } from 'formik';
 
 import AdminPage from './layout/admin_page';
 import MovieAPI from '../api/movie_api'
+
+/**
+ * 
+ * @param {Object} values The values from the form
+ */
+const enumerateShowtimeFields = (values) => {
+  // get the start and end days of the date range
+  let { 
+    start_date,
+    end_date,
+    showtimes,
+  } = values;
+
+  console.log(start_date, end_date);
+  if (!(start_date && end_date)) {
+    return [];
+  }
+
+  // showtimes format
+  // [
+  //   [moment(), '2:35, 5:46, 7:89'],
+  //   [moment(), '2:35, 5:46, 7:89'],
+  // ]
+
+  // enumerate the days
+  let dates = [];
+  do {
+    dates.push(start_date.clone());
+  } while (start_date.add(1, 'days').diff(end_date) < 1);
+
+  // handle new dates before days that already exist
+  let i = 0;
+  while (showtimes[i+1] && dates[i].diff(showtimes[i+1][0], 'days') < 0) {
+    showtimes.unshift([dates[i], '']);
+    i += 1;
+  }
+
+  // handle currently existing dates
+  i += showtimes.length;
+
+  // handle new dates after days that already exist
+  while (i < dates.length) {
+    showtimes.push([dates[i], '']);
+    i += 1;
+  }
+
+  return showtimes;
+}
 
 const movieSchema = yup.object({
   title: yup.string().required(),
@@ -15,20 +63,23 @@ const movieSchema = yup.object({
   runtime: yup.string().required(),
   start_date: yup.string().required(),
   end_date: yup.string().required(),
-  showtimes: yup.object(),
+  showtimes: yup.array(),
 });
 
-const today = moment();
-
+// showtimes format
+// [
+//   [moment(), '2:35, 5:46, 7:89'],
+//   [moment(), '2:35, 5:46, 7:89'],
+// ]
 const blank_movie = {
   label: 'New Movie',
   value: {
     title: '',
     rating: 'G',
     runtime: '',
-    start_date: today,
-    end_date: today.add(1, 'days'),
-    showtimes: {},
+    start_date: undefined,
+    end_date: undefined,
+    showtimes: [],
   }
 }
 
@@ -68,69 +119,6 @@ class Movies extends React.Component {
     console.log(this.state);
   }
 
-  enumerateDates = (field, value) => {
-    let dates = [];
-
-    // get the start and end days of the date range
-    let start = moment('start_date' === field ? value : this.state.start_date).startOf('day');
-    let end = moment('end_date' === field ? value : this.state.end_date).startOf('day');
-
-    // TODO: needs to decide how to handle showtimes that exist in the new date range instead
-    // of just wiping them out.
-
-    // enumerate the days
-    do {
-      dates.push(start.clone());
-    } while (start.add(1, 'days').diff(end) < 1);
-
-    // create the fields
-    const showtimes = {};
-    dates.forEach(date => (showtimes[date] = ''));
-
-    this.setState({
-      [field]: value,
-      showtimes,
-    })
-  }
-
-  handleChange = (event) => {
-    const field = event.target.name;
-
-    let value;
-    if (event.target.type === 'select') {
-      value = event.target.selected;
-    } else {
-      value = event.target.value;
-    }
-
-    this.handleChangeNamed(field, value);
-  }
-
-  handleChangeNamed = (field, value) => {
-    const movie = {...this.state.selected_movie};
-    movie.value[field] = value;
-    this.setState({ selected_movie: movie });
-
-    // if it is a date that is changing, enumerate the dates in between
-    if (['start_date', 'end_date'].includes(field)) {
-      this.enumerateDates(field, value);
-    }
-    // otherwise just update the field given with the value given
-    else {
-      this.setState({
-        [field]: value
-      })
-    }
-  }
-
-  handleChangeShowtimes = (event, key) => {
-    const movie = {...this.state.selected_movie};
-    movie.value.showtimes[key] = event.target.value;
-    this.setState({
-      selected_movie: movie,
-      initialValues: movie,
-    });
-  }
 
 
   handleNewMovie = () => {
@@ -250,21 +238,17 @@ class Movies extends React.Component {
                       <div className='form-row'>
                         <div className='col-auto'>
                           <label htmlFor='start_date'>Start Date</label>
-                          <div className=''>
-                            <DatePicker
-                              name='start_date'
-                              className='form-control'
-                              dateFormat='MM/DD/YYYY'
-                              selected={values.start_date}
-                              onChange={(date) => setFieldValue('start_date', date)}
-                            />
-                          </div>
+                          <DatePicker
+                            name='start_date'
+                            className='form-control'
+                            dateFormat='MM/DD/YYYY'
+                            selected={values.start_date}
+                            onChange={(date) => {
+                              setFieldValue('start_date', date);
+                              setFieldValue('showtimes', enumerateShowtimeFields(values));
+                            }}
+                          />
                         </div>
-                        <div className='col-auto' style={{
-                          alignSelf: 'flex-end',
-                          paddingBottom: '20px',
-                          fontSize: '25px',
-                        }}>></div>
                         <div className='col-auto'>
                           <label htmlFor='end_date'>End Date</label>
                           <DatePicker
@@ -272,7 +256,10 @@ class Movies extends React.Component {
                             className='form-control'
                             dateFormat='MM/DD/YYYY'
                             selected={values.end_date}
-                            onChange={(date) => setFieldValue('end_date', date)}
+                            onChange={(date) => {
+                              setFieldValue('end_date', date);
+                              setFieldValue('showtimes', enumerateShowtimeFields(values));
+                            }}
                           />
                         </div>
                       </div>
@@ -286,22 +273,23 @@ class Movies extends React.Component {
                           Enter start and end dates (inclusive) to see showtimes
                         </div>
                       ) : null}
-                      {Object.keys(values.showtimes).map((key) => {
-                        return (
-                          <div key={key} className='form-group row'>
+                      <FieldArray
+                        name='showtimes' 
+                        render={() => values.showtimes.map((showtime, i) => (
+                          <div key={showtime.date} className='form-group row'>
                             <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>
-                              {moment(key).format('dddd MM/DD')}
+                              {moment(values.showtimes[i][0]).format('dddd MM/DD')}
                             </label>
                             <div className='col'>
                               <Field
                                 className='form-control'
-                                name={`showtimes.${key}`}
+                                name={`showtimes.${i}.1`}
                                 placeholder=''
                               />
                             </div>
                           </div>
-                        );
-                      }, this)}
+                        )
+                      )} />
                     </div>
                   </div>
                   <div className='row'>
