@@ -10,10 +10,14 @@ import AdminPage from './layout/admin_page';
 import MovieAPI from '../api/movie_api'
 
 /**
- * 
+ * showtimes format
+ * [
+ *   [moment(), '2:35, 5:46, 7:89'],
+ *   [moment(), '2:35, 5:46, 7:89'],
+ * ]
  * @param {Object} values The values from the form
  */
-const enumerateShowtimeFields = (values) => {
+function enumerateShowtimeFields(values) {
   // get the start and end days of the date range
   let { 
     start_date,
@@ -21,40 +25,44 @@ const enumerateShowtimeFields = (values) => {
     showtimes,
   } = values;
 
-  console.log(start_date, end_date);
   if (!(start_date && end_date)) {
     return [];
   }
 
-  // showtimes format
-  // [
-  //   [moment(), '2:35, 5:46, 7:89'],
-  //   [moment(), '2:35, 5:46, 7:89'],
-  // ]
-
   // enumerate the days
   let dates = [];
+  let currDate = start_date.clone();
   do {
-    dates.push(start_date.clone());
-  } while (start_date.add(1, 'days').diff(end_date) < 1);
+    dates.push(currDate.clone());
+  } while (currDate.add(1, 'days').diff(end_date) < 1);
 
   // handle new dates before days that already exist
   let i = 0;
-  while (showtimes[i+1] && dates[i].diff(showtimes[i+1][0], 'days') < 0) {
-    showtimes.unshift([dates[i], '']);
-    i += 1;
+  let fieldList = [];
+  if (showtimes.length > 0) {
+    while (dates[i].diff(showtimes[0][0]) < 0) {
+      console.log(dates[i].diff(showtimes[0][0]));
+      fieldList.push([dates[i], '']);
+      i += 1;
+    }
+  } else {
+    fieldList = dates.map(date => [date, '']);
+    i += dates.length;
   }
 
   // handle currently existing dates
-  i += showtimes.length;
+  if (showtimes.length > 0) {
+    fieldList = fieldList.concat(showtimes);
+    i += showtimes.length;
+  }
 
   // handle new dates after days that already exist
   while (i < dates.length) {
-    showtimes.push([dates[i], '']);
+    fieldList.push([dates[i], '']);
     i += 1;
   }
 
-  return showtimes;
+  return fieldList;
 }
 
 const movieSchema = yup.object({
@@ -239,26 +247,36 @@ class Movies extends React.Component {
                         <div className='col-auto'>
                           <label htmlFor='start_date'>Start Date</label>
                           <DatePicker
+                            autocomplete='off'
                             name='start_date'
                             className='form-control'
                             dateFormat='MM/DD/YYYY'
                             selected={values.start_date}
                             onChange={(date) => {
                               setFieldValue('start_date', date);
-                              setFieldValue('showtimes', enumerateShowtimeFields(values));
+                              setFieldValue('showtimes', enumerateShowtimeFields({
+                                start_date: date,
+                                end_date: values.end_date,
+                                showtimes: values.showtimes,
+                              }));
                             }}
                           />
                         </div>
                         <div className='col-auto'>
                           <label htmlFor='end_date'>End Date</label>
                           <DatePicker
+                            autocomplete='off'
                             name='end_date'
                             className='form-control'
                             dateFormat='MM/DD/YYYY'
                             selected={values.end_date}
                             onChange={(date) => {
                               setFieldValue('end_date', date);
-                              setFieldValue('showtimes', enumerateShowtimeFields(values));
+                              setFieldValue('showtimes', enumerateShowtimeFields({
+                                start_date: values.start_date,
+                                end_date: date,
+                                showtimes: values.showtimes,
+                              }));
                             }}
                           />
                         </div>
@@ -276,7 +294,7 @@ class Movies extends React.Component {
                       <FieldArray
                         name='showtimes' 
                         render={() => values.showtimes.map((showtime, i) => (
-                          <div key={showtime.date} className='form-group row'>
+                          <div key={showtime[0]} className='form-group row'>
                             <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>
                               {moment(values.showtimes[i][0]).format('dddd MM/DD')}
                             </label>
