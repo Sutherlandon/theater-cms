@@ -36,30 +36,41 @@ function enumerateShowtimeFields(values) {
     dates.push(currDate.clone());
   } while (currDate.add(1, 'days').diff(end_date) < 1);
 
-  // handle new dates before days that already exist
   let i = 0;
+  let j = 0;
   let fieldList = [];
   if (showtimes.length > 0) {
-    while (dates[i].diff(showtimes[0][0]) < 0) {
-      console.log(dates[i].diff(showtimes[0][0]));
+    // start date before current showtimes
+    if (showtimes[0][0].diff(dates[0]) < 0) {
+      // Move the cursor to the start of the dates
+      while (showtimes[j][0].diff(dates[0]) < 0) {
+        j += 1;
+      }
+    }
+
+    // start date after current showtimes
+    if (dates[0].diff(showtimes[0][0]) < 0) {
+      // handle new dates before days that already exist
+      while (dates[i].diff(showtimes[0][0]) < 0) {
+        fieldList.push([dates[i], '']);
+        i += 1;
+      }
+    }
+
+    // handle currently existing dates
+    while (i < dates.length && j < showtimes.length) {
+      fieldList.push(showtimes[j]);
+      i += 1;
+      j += 1;
+    }
+
+    // handle new dates after days that already exist
+    while (i < dates.length) {
       fieldList.push([dates[i], '']);
       i += 1;
     }
   } else {
     fieldList = dates.map(date => [date, '']);
-    i += dates.length;
-  }
-
-  // handle currently existing dates
-  if (showtimes.length > 0) {
-    fieldList = fieldList.concat(showtimes);
-    i += showtimes.length;
-  }
-
-  // handle new dates after days that already exist
-  while (i < dates.length) {
-    fieldList.push([dates[i], '']);
-    i += 1;
   }
 
   return fieldList;
