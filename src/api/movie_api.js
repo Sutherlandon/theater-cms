@@ -9,10 +9,11 @@ class MovieAPI {
     });
   }
 
-  static create() {
+  static create(data) {
     return axios({
       method: 'post',
       url: `${config.api_path}/movies`,
+      data,
     });
   }
 

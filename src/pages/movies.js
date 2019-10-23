@@ -147,9 +147,35 @@ class Movies extends React.Component {
     });
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('NO SUBMIT FOR YOU!');
+  handleSubmit = (values, formikBag) => {
+
+    const data = { 
+      ...values,
+      showtimes: {},
+    };
+
+    // reformat the showtimes into a simple object
+    values.showtimes.forEach((x) => data.showtimes[x[0]] = x[1])
+
+    console.log('data sent', data);
+
+    return MovieAPI.create(data)
+      .then(
+        (response) => {
+          console.log(response);
+          const movies = response.data;
+          this.setState({
+            movies,
+            selected_movie: movies[0]
+          })
+
+          formikBag.setSubmitting(false);
+        },
+        (error) => {
+          console.log(error);
+          formikBag.setSubmitting(false);
+        }
+      );
 
     // TODO: need save only and publish option
     // TODO: validate the input, yup is your friend!
