@@ -1,13 +1,16 @@
 import React from 'react';
+import axios from 'axios';
 import Select from 'react-select';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import isEmpty from 'lodash.isempty';
 import * as yup from 'yup';
 import { Formik, Form, Field, FieldArray } from 'formik';
+import Dropzone from 'react-dropzone';
 
 import AdminPage from './layout/admin_page';
-import MovieAPI from '../api/movie_api'
+import MovieAPI from '../api/movie_api';
+import config from '../api/config';
 
 /**
  * showtimes format
@@ -149,17 +152,9 @@ class Movies extends React.Component {
 
   handleSubmit = (values, formikBag) => {
 
-    const data = { 
-      ...values,
-      showtimes: {},
-    };
+    console.log('data sent', values);
 
-    // reformat the showtimes into a simple object
-    values.showtimes.forEach((x) => data.showtimes[x[0]] = x[1])
-
-    console.log('data sent', data);
-
-    return MovieAPI.create(data)
+    return MovieAPI.create(values)
       .then(
         (response) => {
           console.log(response);
@@ -232,21 +227,40 @@ class Movies extends React.Component {
               return (
                 <Form>
                   <div className='row mb-4'>
-                    <div className='col col-auto h-100'>
-                      <div className='mb-2'>Poster</div>
-                      <div className='card'>
-                        {movie.poster
-                          ? <img className='card-img-top' src={movie.poster} alt='movie poster'/>
-                          : <div className='dropzone' style={{
-                            border: '4px dashed #DDD',
-                            height: '250px',
-                            color: '#AAA',
-                            textAlign: 'center',
-                            padding: '100px 100px 200px',
-                          }}>
-                            Upload
-                          </div>
-                        }
+                    <div className='col'>
+                      <div className='form-group h-100'>
+                        <Dropzone onDrop={acceptedFiles => {
+                          const file = acceptedFiles[0];
+                          console.log(file)
+                          let formData = new FormData();
+                          formData.append('file', file);
+                          console.log(formData);
+
+                          axios.post( `${config.api_path}/uploads`, formData, { 'Content-Type': file.type })
+                            .then(
+                              (response) => {
+                                console.log(response);
+                              },
+                              (error) => {
+                                console.log(error)
+                              }
+                            )
+                        }}>
+                          {({ getRootProps, getInputProps }) => (
+                            <div {...getRootProps()} style={{
+                              border: '4px dashed gray',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              height: '100%',
+                              width: '240px',
+                              cursor: 'pointer',
+                            }}>
+                              <input {...getInputProps()} />
+                              <p>Drop or click to upload poster file</p>
+                            </div>
+                          )}
+                        </Dropzone>
                       </div>
                     </div>
                     <div className='col'>

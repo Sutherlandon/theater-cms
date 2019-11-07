@@ -1,4 +1,5 @@
 import React from 'react';
+import config from '../api/config';
 
 /**
  *
@@ -19,7 +20,7 @@ const MovieCard = (props) => {
   return (
     <div className="movie-card">
       <div className="poster">
-        <img src={props.poster} alt={props.title}/>
+        <img src={`${config.api_path}/uploads/${props.poster}`} alt={props.title}/>
       </div>
       <div className="info">
         <span className={rating_class}>{props.rating}</span>

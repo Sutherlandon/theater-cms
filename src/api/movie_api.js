@@ -10,10 +10,18 @@ class MovieAPI {
   }
 
   static create(data) {
+    console.log('create data', data);
+
+    const formData = new FormData();
+    Object.keys(data).forEach(key => formData.append(key, data[key]));
+
+    console.log('Form Data', formData);
+
     return axios({
       method: 'post',
       url: `${config.api_path}/movies`,
-      data,
+      headers: { 'Content-Type': 'multipart/form-data'},
+      data: formData,
     });
   }
 
@@ -21,6 +29,7 @@ class MovieAPI {
     return axios({
       method: 'put',
       url: `${config.api_path}/movies`,
+      // headers: { 'Content-Type': 'multipart/form-data'},
       data,
     });
   }
