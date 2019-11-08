@@ -14,7 +14,7 @@ class SelectBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: 'Friday 1/06',
+      value: moment(),
       open: false
     }
 

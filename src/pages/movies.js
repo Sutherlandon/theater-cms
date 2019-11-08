@@ -15,8 +15,8 @@ import config from '../api/config';
 /**
  * showtimes format
  * [
- *   [moment(), '2:35, 5:46, 7:89'],
- *   [moment(), '2:35, 5:46, 7:89'],
+ *   [moment(), '2:35 2D, 5:46 2D, 7:89 3D'],
+ *   [moment(), '2:35 2D, 5:46 2D, 7:89 3D'],
  * ]
  * @param {Object} values The values from the form
  */
@@ -129,7 +129,8 @@ class Movies extends React.Component {
         if (movies.length > 0) {
           this.setState({
             movies,
-            selected_movie: movies[0]
+            selected_movie: movies[0],
+            initialValues: movies[0].value,
           });
         }
       },
@@ -138,10 +139,8 @@ class Movies extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log(this.state);
+    console.log('Updated', this.state);
   }
-
-
 
   handleNewMovie = () => {
     this.setState({
@@ -151,8 +150,27 @@ class Movies extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-
     console.log('data sent', values);
+
+    if (values._id) {
+      return MovieAPI.update(values)
+        .then(
+          (response) => {
+            console.log(response);
+            const movies = response.data;
+            this.setState({
+              movies,
+              selected_movie: movies[0]
+            })
+
+            formikBag.setSubmitting(false);
+          },
+          (error) => {
+            console.log(error);
+            formikBag.setSubmitting(false);
+          }
+        );
+    }
 
     return MovieAPI.create(values)
       .then(
@@ -220,154 +238,146 @@ class Movies extends React.Component {
             initialValues={this.state.initialValues}
             validationSchema={movieSchema}
             onSubmit={this.handleSubmit}
+            enableReinitialize
           >
             {({ values, errors, touched, setFieldValue}) => {
               console.log('VALUES', values);
 
               return (
                 <Form>
-                  <div className='row mb-4'>
-                    <div className='col'>
-                      <div className='form-group h-100'>
-                        <Dropzone onDrop={acceptedFiles => {
-                          const file = acceptedFiles[0];
-                          console.log(file)
-                          let formData = new FormData();
-                          formData.append('file', file);
-                          console.log(formData);
+                  <div className='form-group h-100'>
+                    <label>Poster</label>
+                    <Dropzone onDrop={acceptedFiles => {
+                      const file = acceptedFiles[0];
+                      let formData = new FormData();
+                      formData.append('file', file);
 
-                          axios.post( `${config.api_path}/uploads`, formData, { 'Content-Type': file.type })
-                            .then(
-                              (response) => {
-                                console.log(response);
-                              },
-                              (error) => {
-                                console.log(error)
-                              }
-                            )
-                        }}>
-                          {({ getRootProps, getInputProps }) => (
-                            <div {...getRootProps()} style={{
-                              border: '4px dashed gray',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              height: '100%',
-                              width: '240px',
-                              cursor: 'pointer',
-                            }}>
-                              <input {...getInputProps()} />
-                              <p>Drop or click to upload poster file</p>
-                            </div>
-                          )}
-                        </Dropzone>
-                      </div>
-                    </div>
-                    <div className='col'>
-                      <div className='form-group'>
-                        <label htmlFor='title'>Title</label>
-                        <Field
-                          className='form-control w-auto'
-                          name='title'
-                          placeholder='Movie Title'
-                        />
-                      </div>
-                      <div className='form-group'>
-                        <label htmlFor='rating'>Rating</label>
-                        <Field 
-                          className='form-control w-auto'
-                          component='select'
-                          name='rating'
-                        >
-                          <option value='G'>G</option>
-                          <option value='PG'>PG</option>
-                          <option value='PG-13'>PG-13</option>
-                          <option value='R'>R</option>
-                          <option value='NC-17'>NC-17</option>
-                        </Field>
-                      </div>
-                      <div className='form-group'>
-                        <label htmlFor='runtime'>Runtime</label>
-                        <Field
-                          className='form-control w-auto'
-                          name='runtime'
-                          placeholder='ie. 2h 35m'
-                        />
-                      </div>
-                      <div className='form-row'>
-                        <div className='col-auto'>
-                          <label htmlFor='start_date'>Start Date</label>
-                          <DatePicker
-                            autocomplete='off'
-                            name='start_date'
-                            className='form-control'
-                            dateFormat='MM/DD/YYYY'
-                            selected={values.start_date}
-                            onChange={(date) => {
-                              setFieldValue('start_date', date);
-                              setFieldValue('showtimes', enumerateShowtimeFields({
-                                start_date: date,
-                                end_date: values.end_date,
-                                showtimes: values.showtimes,
-                              }));
-                            }}
-                          />
-                        </div>
-                        <div className='col-auto'>
-                          <label htmlFor='end_date'>End Date</label>
-                          <DatePicker
-                            autocomplete='off'
-                            name='end_date'
-                            className='form-control'
-                            dateFormat='MM/DD/YYYY'
-                            selected={values.end_date}
-                            onChange={(date) => {
-                              setFieldValue('end_date', date);
-                              setFieldValue('showtimes', enumerateShowtimeFields({
-                                start_date: values.start_date,
-                                end_date: date,
-                                showtimes: values.showtimes,
-                              }));
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='row mb-4'>
-                    <div className='col'>
-                      <h3>Showtimes</h3>
-                      {isEmpty(values.showtimes) ? (
-                        <div>
-                          Enter start and end dates (inclusive) to see showtimes
-                        </div>
-                      ) : null}
-                      <FieldArray
-                        name='showtimes' 
-                        render={() => values.showtimes.map((showtime, i) => (
-                          <div key={showtime[0]} className='form-group row'>
-                            <label className='col-2 col-form-label' style={{ textAlign: 'right' }}>
-                              {moment(values.showtimes[i][0]).format('dddd MM/DD')}
-                            </label>
-                            <div className='col'>
-                              <Field
-                                className='form-control'
-                                name={`showtimes.${i}.1`}
-                                placeholder=''
-                              />
-                            </div>
-                          </div>
+                      axios.post(
+                        `${config.api_path}/uploads`,
+                        formData,
+                        { 'Content-Type': file.type }
+                      )
+                        .then(
+                          (response) => {
+                            console.log(response);
+                            setFieldValue('poster', file.name);
+                          },
+                          (error) => {
+                            console.log(error)
+                          }
                         )
-                      )} />
+                    }}>
+                      {({ getRootProps, getInputProps }) => (
+                        <div {...getRootProps()} style={{
+                          alignItems: 'center',
+                          border: '4px dashed gray',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          height: '100px',
+                          justifyContent: 'center',
+                          padding: '16px 32px',
+                          width: 'fit-content',
+                        }}>
+                          <input {...getInputProps()} />
+                          ^ Drop or click to upload poster file ^
+                        </div>
+                      )}
+                    </Dropzone>
+                  </div>
+                  <div className='form-group'>
+                    <label htmlFor='title'>Title</label>
+                    <Field
+                      className='form-control w-auto'
+                      name='title'
+                      placeholder='Movie Title'
+                    />
+                  </div>
+                  <div className='form-group'>
+                    <label htmlFor='rating'>Rating</label>
+                    <Field 
+                      className='form-control w-auto'
+                      component='select'
+                      name='rating'
+                    >
+                      <option value='G'>G</option>
+                      <option value='PG'>PG</option>
+                      <option value='PG-13'>PG-13</option>
+                      <option value='R'>R</option>
+                      <option value='NC-17'>NC-17</option>
+                    </Field>
+                  </div>
+                  <div className='form-group'>
+                    <label htmlFor='runtime'>Runtime</label>
+                    <Field
+                      className='form-control w-auto'
+                      name='runtime'
+                      placeholder='ie. 2h 35m'
+                    />
+                  </div>
+                  <div className='form-row'>
+                    <div className='col-auto'>
+                      <label htmlFor='start_date'>Start Date</label>
+                      <DatePicker
+                        autocomplete='off'
+                        name='start_date'
+                        className='form-control'
+                        dateFormat='MM/DD/YYYY'
+                        selected={values.start_date}
+                        onChange={(date) => {
+                          setFieldValue('start_date', date);
+                          setFieldValue('showtimes', enumerateShowtimeFields({
+                            start_date: date,
+                            end_date: values.end_date,
+                            showtimes: values.showtimes,
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className='col-auto'>
+                      <label htmlFor='end_date'>End Date</label>
+                      <DatePicker
+                        autocomplete='off'
+                        name='end_date'
+                        className='form-control'
+                        dateFormat='MM/DD/YYYY'
+                        selected={values.end_date}
+                        onChange={(date) => {
+                          setFieldValue('end_date', date);
+                          setFieldValue('showtimes', enumerateShowtimeFields({
+                            start_date: values.start_date,
+                            end_date: date,
+                            showtimes: values.showtimes,
+                          }));
+                        }}
+                      />
                     </div>
                   </div>
-                  <div className='row'>
-                    <div className='col-3'>
-                      <button type='submit' className='btn btn-primary w-100' value='submit'>
-                        Publish
-                      </button>
-                    </div>
+                  <div className='mb-5'>
+                    <h3 style={{ marginTop: '16px', marginBottom: '16px' }}>Showtimes</h3>
+                    {isEmpty(values.showtimes) ? (
+                      <div>
+                        Enter start and end dates (inclusive) to see showtimes
+                      </div>
+                    ) : null}
+                    <FieldArray
+                      name='showtimes' 
+                      render={() => values.showtimes.map((showtime, i) => (
+                        <div key={showtime[0]} className='form-group'>
+                          <label htmlFor={`showtimes.${i}.1`}>
+                            {moment(values.showtimes[i][0]).format('dddd MM/DD')}
+                          </label>
+                          <Field
+                            className='form-control'
+                            name={`showtimes.${i}.1`}
+                            placeholder=''
+                          />
+                        </div>
+                      )
+                    )} />
                   </div>
+                  <button type='submit' className='btn btn-primary px-5' value='submit'>
+                    Publish
+                  </button>
                 </Form>
               );
             }}

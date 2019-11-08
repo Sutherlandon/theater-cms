@@ -15,7 +15,7 @@ class MovieGrid extends React.Component {
     super(props);
     this.state = {
       collapsed: '',
-      current_date: '1/04/2019',
+      current_date: moment(),
       movies: [],
     };
   }
@@ -29,9 +29,18 @@ class MovieGrid extends React.Component {
         const movies = result.data;
 
         let show_dates = [];
-        movies.forEach(movie => {
-          show_dates = union(show_dates, Object.keys(movie.showtimes));
+        movies.forEach((movie, i) => {
+          // convert showtimes to an object
+          let showtimes = {}
+          movie.showtimes.forEach(([date, times]) => showtimes[date] = times);
+          console.log('showtimes', showtimes)
+          movies[i].showtimes = showtimes;
+
+          // get the dates shows are showing on
+          show_dates = union(show_dates, Object.keys(showtimes));
         });
+
+        console.log('loaded movies', movies, show_dates);
 
         this.setState({
           current_date: show_dates[0],
