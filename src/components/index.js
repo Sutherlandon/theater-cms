@@ -4,7 +4,6 @@ export { default as MovieCard } from './movie_card';
 export { default as MovieGrid } from './movie_grid';
 export { default as SectionTitle } from './section_title';
 export { default as TicketInfo } from './ticket_info';
-export { default as InfoSection } from './info_section';
 export { default as TheaterInfo } from './theater_info';
 export { default as ConctCard } from './contact_card';
 export { default as Footer } from './footer';

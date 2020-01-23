@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { CssBaseline } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/core/styles';
 
-import { Admin } from './pages/admin';
-import { Home } from './pages/home';
+import { Admin, Home } from './pages';
+import theme from './theme';
 
 ReactDOM.render((
-  <BrowserRouter>
-    <Switch>
-      <Route exact path='/' component={Home}/>
-      <Route path='/admin' component={Admin}/>
-    </Switch>
-  </BrowserRouter>
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <BrowserRouter>
+      <Switch>
+        <Route exact path='/' component={Home}/>
+        <Route path='/admin' component={Admin}/>
+      </Switch>
+    </BrowserRouter>
+  </ThemeProvider>
 ), document.getElementById("root"));

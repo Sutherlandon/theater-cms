@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 
 import {
   Footer,
@@ -8,16 +9,21 @@ import {
   TicketInfo,
 } from '../components';
 
-export class Home extends React.Component {
-  render(props) {
-    return (
-      <React.Fragment>
-        <Header />
-        <MovieGrid />
-        <TicketInfo />
-        <TheaterInfo />
-        <Footer />
-      </React.Fragment>
-    );
-  }
+const useStyles = makeStyles({
+})
+
+function Home(props) {
+  const classes = useStyles();
+  
+  return (
+    <Fragment>
+      <Header />
+      <MovieGrid />
+      <TicketInfo />
+      <TheaterInfo />
+      <Footer />
+    </Fragment>
+  );
 }
+
+export default Home;

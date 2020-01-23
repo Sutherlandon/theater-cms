@@ -5,7 +5,7 @@ import config from '../api/config';
  *
  */
 const MovieCard = (props) => {
-  console.log('movie card', props);
+  // console.log('movie card', props);
   if (!props.showtimes) {
     return null;
   }
