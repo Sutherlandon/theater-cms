@@ -1,11 +1,63 @@
 import React from 'react';
 import moment from 'moment';
 import union from 'lodash.union';
+import { withStyles } from '@material-ui/core/styles';
 
 import SelectBox from './select_box';
 import MovieCard from './movie_card';
 
 import MovieAPI from '../api/movie_api';
+import { Grid } from '@material-ui/core';
+
+const styles = (theme) => ({
+  movieDeck: {
+    justifyContent: 'center',
+    padding: '0.5em 0.5em 2em',
+
+    [theme.breakpoints.down('sm')]: {
+      justifyContent: 'flex-start',
+      overflowX: 'auto',
+      overflowY: 'hidden',
+      whiteSpace: 'nowrap',
+      flexWrap: 'nowrap',
+      '-webkit-overflow-scrolling': 'touch',
+
+      '&:after': {
+        content: "",
+        flex: '0 0 0.5em',
+      },
+    }
+  },
+  deckSlideIndicator: {
+    display: 'none',
+    opacity: 1,
+    maxHeight: '1em',
+    transition: 'opacity 1s, max-height 1s',
+
+    [theme.breakpoints.down('sm')]: {
+      color: 'fadeout(@primary-light, 20%)',
+      display: 'block',
+      margin: '-1em auto 2em',
+      textAlign: 'center',
+
+      '&::after': {
+        border: 'solid fadeout(@primary-light, 20%)',
+        borderWidth: '0 3px 3px 0',
+        content: '',
+        display: 'inline-block',
+        padding: '0.25em',
+        transform: 'rotate(-45deg)',
+        '-webkit-transform': 'rotate(-45deg)',
+      },
+    },
+
+    '&.collapsed': {
+      opacity: 0,
+      maxHeight: 0,
+    },
+  }
+});
+
 
 /**
  *
@@ -61,7 +113,9 @@ class MovieGrid extends React.Component {
     });
   }
 
-  render(props) {
+  render() {
+    const { classes } = this.props;
+
     if (!this.state.show_dates) {
       return null;
     }
@@ -69,26 +123,29 @@ class MovieGrid extends React.Component {
     return (
       <React.Fragment>
         <SelectBox
-          id='now-showing'
           options={this.state.show_dates}
           onChange={(date) => this.setState({ current_date: date })}
           value={this.state.current_date}
         />
-        <div className='movie-deck' onScroll={() => this.setState({collapsed: 'collapsed'})}>
-          {this.state.movies.map((movie, i) => {
-            return (
+        <Grid
+          className={classes.movieDeck}
+          container
+          spacing={1}
+          onScroll={() => this.setState({collapsed: 'collapsed'})}
+        >
+          {this.state.movies.map((movie, i) => (
+            <Grid item key={movie.title}>
               <MovieCard
-                key={i}
                 title={movie.title}
                 poster={movie.poster}
                 rating={movie.rating}
                 runtime={movie.runtime}
                 showtimes={movie.showtimes[this.state.current_date]}
               />
-            );
-          })}
-        </div>
-        <div className={'deck-slide-indicator ' + this.state.collapsed}>
+            </Grid>
+          ))}
+        </Grid>
+        <div className={classes.deckSlideIndicator + ' ' + this.state.collapsed}>
           Slide for more
         </div>
       </React.Fragment>
@@ -96,4 +153,4 @@ class MovieGrid extends React.Component {
   }
 }
 
-export default MovieGrid;
+export default withStyles(styles)(MovieGrid);

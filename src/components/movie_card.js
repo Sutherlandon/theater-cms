@@ -1,33 +1,110 @@
 import React from 'react';
+import { Paper } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import config from '../api/config';
+
+
+const useStyles = makeStyles((theme) => ({
+  movieCard: {
+    backgroundColor: theme.palette.light,
+    textAlign: 'center',
+    width: '13em',
+  },
+
+  posterImg: {
+    borderRadius: '4px 4px 0 0',
+    display: 'block',
+    width: '100%',
+  },
+
+  info: {
+    display: 'flex',
+    justifyContent: 'space-around',
+    padding: '0.5em 0',
+  },
+
+  /* these colors taken from bootstrap buttons */
+  G: {
+    color: 'white',
+    backgroundColor: '#5cb85c',
+    borderColor: '#4cae4c',
+  },
+  PG: {
+    color: 'white',
+    backgroundColor: '#5bc0de',
+    borderColor: '#46b8da',
+  },
+  'PG-13': {
+    color: 'white',
+    backgroundColor: '#f0ad4e',
+    borderColor: '#eea236',
+  },
+  R: {
+    color: 'white',
+    backgroundColor: '#d9534f',
+    borderColor: '#d43f3a',
+  },
+
+  runtime: {
+    borderColor: '#999',
+    backgroundColor: 'white',
+  },
+  showtimes: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gridColumnGap: '0.5em',
+    gridRowGap: '0.5em',
+    padding: '0.25em',
+
+    '& span': {
+      color: 'white',
+      backgroundColor: '#337ab7',
+      borderColor: '#2e6da4',
+    }
+  },
+  span: {
+    borderRadius: 4,
+    border: '1px solid #DDD',
+    minWidth: '5em',
+    padding: '0.25em',
+  },
+}));
 
 /**
  *
  */
-const MovieCard = (props) => {
+function MovieCard(props) {
+  const classes = useStyles();
+  const {
+    poster,
+    rating,
+    runtime,
+    showtimes,
+    title,
+  } = props;
+
   // console.log('movie card', props);
-  if (!props.showtimes) {
+  if (!showtimes) {
     return null;
   }
 
-  const rating_class = "rating " + props.rating;
-  const showtimes = props.showtimes.split(', ').map((time, i) => {
-    return (
-      <span key={i}>{time}</span>
-    )
-  });
-
   return (
-    <div className="movie-card">
-      <div className="poster">
-        <img src={`${config.api_path}/uploads/${props.poster}`} alt={props.title}/>
+    <Paper className={classes.movieCard}>
+      <img 
+        className={classes.posterImg}
+        src={`${config.api_path}/uploads/${poster}`}
+        alt={title}
+      />
+      <div className={classes.info}>
+        <span className={classes.span + ' ' + classes[rating]}>{rating}</span>
+        <span className={classes.span + ' ' + classes.runtime}>{runtime}</span>
       </div>
-      <div className="info">
-        <span className={rating_class}>{props.rating}</span>
-        <span className="runtime">{props.runtime}</span>
+      <div className={classes.showtimes}>
+        {showtimes.split(', ').map((time, i) => (
+          <span key={i} className={classes.span}>{time}</span>
+        ))}
       </div>
-      <div className="showtimes">{showtimes}</div>
-    </div>
+    </Paper>
   )
 }
 
