@@ -1,16 +1,20 @@
 import React from 'react';
 import axios from 'axios';
-import Select from 'react-select';
-import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import isEmpty from 'lodash.isempty';
 import * as yup from 'yup';
-import { Formik, Form, Field, FieldArray } from 'formik';
+import ReactSelect from 'react-select';
+import DatePicker from 'react-datepicker';
 import Dropzone from 'react-dropzone';
+import { MenuItem } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import { Formik, Form, Field, FieldArray } from 'formik';
 
+import config from '../api/config';
 import AdminPage from './layout/admin_page';
 import MovieAPI from '../api/movie_api';
-import config from '../api/config';
+import TextField from '../components/formik/TextField';
+import Select from '../components/formik/Select';
 
 /**
  * showtimes format
@@ -78,6 +82,12 @@ function enumerateShowtimeFields(values) {
 
   return fieldList;
 }
+
+const styles = (theme) => ({
+  formGroup: {
+    marginBottom: theme.spacing(2),
+  },
+});
 
 const movieSchema = yup.object({
   title: yup.string().required(),
@@ -195,6 +205,7 @@ class Movies extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
     let movie = this.state.selected_movie.value;
 
     if (!movie) {
@@ -210,7 +221,7 @@ class Movies extends React.Component {
         {/* Movie Selector */}
         <div className='row pb-4 mb-4' style={{ borderBottom: 'solid 1px #DDD' }}>
           <div className='col col-xs-10 col-xl-3'>
-            <Select
+            <ReactSelect
               value={this.state.selected_movie}
               onChange={(option) => this.setState({ 
                 selected_movie: option,
@@ -284,36 +295,20 @@ class Movies extends React.Component {
                       )}
                     </Dropzone>
                   </div>
-                  <div className='form-group'>
-                    <label htmlFor='title'>Title</label>
-                    <Field
-                      className='form-control w-auto'
-                      name='title'
-                      placeholder='Movie Title'
-                    />
-                  </div>
-                  <div className='form-group'>
-                    <label htmlFor='rating'>Rating</label>
-                    <Field 
-                      className='form-control w-auto'
-                      component='select'
-                      name='rating'
-                    >
-                      <option value='G'>G</option>
-                      <option value='PG'>PG</option>
-                      <option value='PG-13'>PG-13</option>
-                      <option value='R'>R</option>
-                      <option value='NC-17'>NC-17</option>
-                    </Field>
-                  </div>
-                  <div className='form-group'>
-                    <label htmlFor='runtime'>Runtime</label>
-                    <Field
-                      className='form-control w-auto'
-                      name='runtime'
-                      placeholder='ie. 2h 35m'
-                    />
-                  </div>
+                  <TextField
+                    name='title'
+                    label='Movie Title'
+                  />
+                  <Select
+                    label='Rating'
+                    name='rating'
+                    options={['G', 'PG', 'PG-13', 'R', 'NC-17']}
+                  />
+                  <TextField
+                    name='runtime'
+                    placeholder='ie. 2h 35m'
+                    label='Runtime'
+                  />
                   <div className='form-row'>
                     <div className='col-auto'>
                       <label htmlFor='start_date'>Start Date</label>
@@ -388,4 +383,4 @@ class Movies extends React.Component {
   }
 }
 
-export default Movies;
+export default withStyles(styles)(Movies);

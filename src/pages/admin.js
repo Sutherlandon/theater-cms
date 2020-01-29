@@ -1,6 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Link, Switch, Redirect, Route } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton, Typography, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider,  } from '@material-ui/core';
+import { 
+  AppBar,
+  Divider,
+  Drawer,
+  Hidden,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  Typography,
+  TextField,
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoviesIcon from '@material-ui/icons/Theaters';
@@ -10,21 +23,33 @@ import HomeIcon from '@material-ui/icons/Home';
 import Movies from './movies';
 import Users from './users';
 
-const useHeaderStyles = makeStyles({
+import backgroundImage from '../images/IMG_7137.JPG';
+
+const useHeaderStyles = makeStyles((theme) => ({
   menuButton: {
     color: 'whitesmoke',
-  }
-});
+  },
+  gradient: {
+    backgroundImage: theme.palette.fadedGradient,
+    backgroundImage: `${theme.palette.fadedGradient}, url(${backgroundImage})`,
+    backgroundPosition: 'top center',
+    backgroundSize: 'cover',
+    height: '100%',
+    paddingTop: '0.001em',
+  },
+}));
 
 function Header({ toggleDrawer }) {
   const classes = useHeaderStyles();
   return (
     <AppBar>
-      <Toolbar className="gradient-overlay">
-        <IconButton onClick={toggleDrawer}>
-          <MenuIcon fontSize='large' className={classes.menuButton} />
-        </IconButton>
-        <Typography variant='h1'>Theater CMS Admin</Typography>
+      <Toolbar className={classes.gradient}>
+        <Hidden mdUp>
+          <IconButton onClick={toggleDrawer}>
+            <MenuIcon fontSize='large' className={classes.menuButton} />
+          </IconButton>
+        </Hidden>
+        <Typography variant='h4'>Theater CMS Admin</Typography>
       </Toolbar>
     </AppBar>
   );
@@ -126,4 +151,4 @@ function Admin(props) {
   );
 }
 
-export { Admin };
+export default Admin;
