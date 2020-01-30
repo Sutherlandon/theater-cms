@@ -1,11 +1,9 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import backgroundImage from '../images/IMG_7137.JPG'
 
 const useHeaderStyles = makeStyles((theme) => ({
   gradient: {
-    backgroundImage: theme.palette.fadedGradient,
     backgroundImage: `${theme.palette.fadedGradient}, url(${backgroundImage})`,
     backgroundPosition: 'top center',
     backgroundSize: 'cover',
@@ -40,6 +38,3 @@ function Header({ toggleDrawer }) {
 }
 
 export default Header;
-
-// const Header = (props) => {
-// }

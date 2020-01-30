@@ -4,10 +4,9 @@ import moment from 'moment';
 import isEmpty from 'lodash.isempty';
 import * as yup from 'yup';
 import ReactSelect from 'react-select';
-import DatePicker from 'react-datepicker';
 import Dropzone from 'react-dropzone';
-import { MenuItem } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import { Grid } from '@material-ui/core';
+//import { withStyles } from '@material-ui/core/styles';
 import { Formik, Form, Field, FieldArray } from 'formik';
 
 import config from '../api/config';
@@ -15,6 +14,7 @@ import AdminPage from './layout/admin_page';
 import MovieAPI from '../api/movie_api';
 import TextField from '../components/formik/TextField';
 import Select from '../components/formik/Select';
+import DatePicker from '../components/formik/DatePicker';
 
 /**
  * showtimes format
@@ -83,11 +83,11 @@ function enumerateShowtimeFields(values) {
   return fieldList;
 }
 
-const styles = (theme) => ({
-  formGroup: {
-    marginBottom: theme.spacing(2),
-  },
-});
+// const styles = (theme) => ({
+//   formGroup: {
+//     marginBottom: theme.spacing(2),
+//   },
+// });
 
 const movieSchema = yup.object({
   title: yup.string().required(),
@@ -205,7 +205,7 @@ class Movies extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     let movie = this.state.selected_movie.value;
 
     if (!movie) {
@@ -295,47 +295,50 @@ class Movies extends React.Component {
                       )}
                     </Dropzone>
                   </div>
-                  <TextField
-                    name='title'
-                    label='Movie Title'
-                  />
-                  <Select
-                    label='Rating'
-                    name='rating'
-                    options={['G', 'PG', 'PG-13', 'R', 'NC-17']}
-                  />
-                  <TextField
-                    name='runtime'
-                    placeholder='ie. 2h 35m'
-                    label='Runtime'
-                  />
-                  <div className='form-row'>
-                    <div className='col-auto'>
-                      <label htmlFor='start_date'>Start Date</label>
-                      <DatePicker
-                        autocomplete='off'
+                  <Grid container>
+                    <Grid item xs={12} md={4}>
+                      <TextField
+                        name='title'
+                        label='Movie Title'
+                        style={{ width: '100%' }}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item xs={6} md={2}>
+                      <TextField
+                        name='runtime'
+                        placeholder='ie. 2h 35m'
+                        label='Runtime'
+                      />
+                    </Grid>
+                    <Grid item xs={6} md={1}>
+                      <Select
+                        label='Rating'
+                        name='rating'
+                        options={['G', 'PG', 'PG-13', 'R', 'NC-17']}
+                      />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2}>
+                    <Grid item md={2}>
+                      <DatePicker 
+                        label='Start Date'
                         name='start_date'
-                        className='form-control'
-                        dateFormat='MM/DD/YYYY'
-                        selected={values.start_date}
                         onChange={(date) => {
                           setFieldValue('start_date', date);
                           setFieldValue('showtimes', enumerateShowtimeFields({
-                            start_date: date,
-                            end_date: values.end_date,
+                            start_date: values.start_date,
+                            end_date: date,
                             showtimes: values.showtimes,
                           }));
                         }}
                       />
-                    </div>
-                    <div className='col-auto'>
-                      <label htmlFor='end_date'>End Date</label>
-                      <DatePicker
-                        autocomplete='off'
+                    </Grid>
+                    <Grid item md={2}>
+                      <DatePicker 
+                        label='End Date'
                         name='end_date'
-                        className='form-control'
-                        dateFormat='MM/DD/YYYY'
-                        selected={values.end_date}
                         onChange={(date) => {
                           setFieldValue('end_date', date);
                           setFieldValue('showtimes', enumerateShowtimeFields({
@@ -345,8 +348,8 @@ class Movies extends React.Component {
                           }));
                         }}
                       />
-                    </div>
-                  </div>
+                    </Grid>
+                  </Grid>
                   <div className='mb-5'>
                     <h3 style={{ marginTop: '16px', marginBottom: '16px' }}>Showtimes</h3>
                     {isEmpty(values.showtimes) ? (
@@ -383,4 +386,4 @@ class Movies extends React.Component {
   }
 }
 
-export default withStyles(styles)(Movies);
+export default Movies; //withStyles(styles)(Movies);

@@ -47,7 +47,7 @@ class Users extends React.Component {
           <tbody>
             {this.state.users.map((user) => {
               return (
-                <tr>
+                <tr key={user.username}>
                   <td>{user.username}</td>
                   <td>user, admin</td>
                   <td>{user.created}</td>

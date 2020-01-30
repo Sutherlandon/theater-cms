@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+//import { makeStyles } from '@material-ui/core/styles';
 
 import {
   Footer,
@@ -9,11 +9,11 @@ import {
   TicketInfo,
 } from '../components';
 
-const useStyles = makeStyles({
-})
+// const useStyles = makeStyles({
+// })
 
 function Home(props) {
-  const classes = useStyles();
+  //const classes = useStyles();
   
   return (
     <Fragment>

@@ -12,7 +12,6 @@ import {
   ListItemText,
   Toolbar,
   Typography,
-  TextField,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -30,7 +29,6 @@ const useHeaderStyles = makeStyles((theme) => ({
     color: 'whitesmoke',
   },
   gradient: {
-    backgroundImage: theme.palette.fadedGradient,
     backgroundImage: `${theme.palette.fadedGradient}, url(${backgroundImage})`,
     backgroundPosition: 'top center',
     backgroundSize: 'cover',

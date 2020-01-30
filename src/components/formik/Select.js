@@ -43,7 +43,7 @@ function FormikSelect(props) {
               {...rest}
             >
               {formattedOptions.map(({ value, label }) => (
-                <MenuItem value={value}>{label}</MenuItem>
+                <MenuItem key={label} value={value}>{label}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -57,7 +57,7 @@ FormikSelect.propTypes = {
   label: PropTypes.string,
   name: PropTypes.string,
   options: PropTypes.arrayOf(
-    PropTypes.oneOf([
+    PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.shape({
         label: PropTypes.string,
