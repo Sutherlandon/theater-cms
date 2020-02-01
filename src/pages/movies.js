@@ -5,8 +5,10 @@ import isEmpty from 'lodash.isempty';
 import * as yup from 'yup';
 import ReactSelect from 'react-select';
 import Dropzone from 'react-dropzone';
-import { Grid } from '@material-ui/core';
-//import { withStyles } from '@material-ui/core/styles';
+import { Grid, Button } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import PublishIcon from '@material-ui/icons/Publish';
+import AddIcon from '@material-ui/icons/Add';
 import { Formik, Form, Field, FieldArray } from 'formik';
 
 import config from '../api/config';
@@ -83,11 +85,31 @@ function enumerateShowtimeFields(values) {
   return fieldList;
 }
 
-// const styles = (theme) => ({
-//   formGroup: {
-//     marginBottom: theme.spacing(2),
-//   },
-// });
+const styles = (theme) => ({
+  bottomLine: {
+    borderBottom: 'solid 1px #DDD',
+  },
+  dropzone: {
+    alignItems: 'center',
+    border: '4px dashed gray',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    display: 'flex',
+    height: '100%',
+    justifyContent: 'center',
+    padding: '16px 32px',
+    width: '100%',
+  },
+  formGroup: {
+    marginBottom: theme.spacing(2),
+  },
+  // publish: {
+  //   backgrounColor: theme.palette.primary,
+  // },
+  iconLeft: {
+    marginRight: theme.spacing(),
+  },
+});
 
 const movieSchema = yup.object({
   title: yup.string().required(),
@@ -205,7 +227,7 @@ class Movies extends React.Component {
   }
 
   render() {
-    // const { classes } = this.props;
+    const { classes } = this.props;
     let movie = this.state.selected_movie.value;
 
     if (!movie) {
@@ -219,8 +241,8 @@ class Movies extends React.Component {
     return (
       <AdminPage title='Movies'>
         {/* Movie Selector */}
-        <div className='row pb-4 mb-4' style={{ borderBottom: 'solid 1px #DDD' }}>
-          <div className='col col-xs-10 col-xl-3'>
+        <Grid container spacing={2} className={classes.bottomLine}>
+          <Grid item>
             <ReactSelect
               value={this.state.selected_movie}
               onChange={(option) => this.setState({ 
@@ -230,13 +252,18 @@ class Movies extends React.Component {
               options={this.state.movies}
               className='form-group-auto'
             />
-          </div>
-          <div className='col col-xs-2 col-xl-3 pl-0'>
-            <button onClick={this.handleNewMovie} type='submit' className='btn btn-primary'>
+          </Grid>
+          <Grid item>
+            <Button
+              color='secondary'
+              variant='contained'
+              onClick={this.handleNewMovie}
+            >
+              <AddIcon className={classes.iconLeft} />
               New Movie
-            </button>
-          </div>
-        </div>
+            </Button>
+          </Grid>
+        </Grid>
 
         {/* Movie Form section */}
         <div className='movie-block'>
@@ -256,101 +283,96 @@ class Movies extends React.Component {
 
               return (
                 <Form>
-                  <div className='form-group h-100'>
-                    <label>Poster</label>
-                    <Dropzone onDrop={acceptedFiles => {
-                      const file = acceptedFiles[0];
-                      let formData = new FormData();
-                      formData.append('file', file);
+                  <Grid container spacing={4}>
+                    <Grid item xs={12} md={6}>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <TextField
+                            name='title'
+                            label='Movie Title'
+                            style={{ width: '100%' }}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <TextField
+                            name='runtime'
+                            placeholder='ie. 2h 35m'
+                            label='Runtime'
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <Select
+                            label='Rating'
+                            name='rating'
+                            options={['G', 'PG', 'PG-13', 'R', 'NC-17']}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid item xs={6}>
+                          <DatePicker 
+                            label='Start Date'
+                            name='start_date'
+                            onChange={(date) => {
+                              setFieldValue('start_date', date);
+                              setFieldValue('showtimes', enumerateShowtimeFields({
+                                start_date: values.start_date,
+                                end_date: date,
+                                showtimes: values.showtimes,
+                              }));
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                          <DatePicker 
+                            label='End Date'
+                            name='end_date'
+                            onChange={(date) => {
+                              setFieldValue('end_date', date);
+                              setFieldValue('showtimes', enumerateShowtimeFields({
+                                start_date: values.start_date,
+                                end_date: date,
+                                showtimes: values.showtimes,
+                              }));
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <Dropzone onDrop={(acceptedFiles) => {
+                        const file = acceptedFiles[0];
+                        let formData = new FormData();
+                        formData.append('file', file);
 
-                      axios.post(
-                        `${config.api_path}/uploads`,
-                        formData,
-                        { 'Content-Type': file.type }
-                      )
-                        .then(
-                          (response) => {
-                            console.log(response);
-                            setFieldValue('poster', file.name);
-                          },
-                          (error) => {
-                            console.log(error)
-                          }
+                        axios.post(
+                          `${config.api_path}/uploads`,
+                          formData,
+                          { 'Content-Type': file.type }
                         )
-                    }}>
-                      {({ getRootProps, getInputProps }) => (
-                        <div {...getRootProps()} style={{
-                          alignItems: 'center',
-                          border: '4px dashed gray',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          height: '100px',
-                          justifyContent: 'center',
-                          padding: '16px 32px',
-                          width: 'fit-content',
-                        }}>
-                          <input {...getInputProps()} />
-                          ^ Drop or click to upload poster file ^
-                        </div>
-                      )}
-                    </Dropzone>
-                  </div>
-                  <Grid container>
-                    <Grid item xs={12} md={4}>
-                      <TextField
-                        name='title'
-                        label='Movie Title'
-                        style={{ width: '100%' }}
-                      />
+                          .then(
+                            (response) => {
+                              console.log(response);
+                              setFieldValue('poster', file.name);
+                            },
+                            (error) => {
+                              console.log(error)
+                            }
+                          )
+                      }}>
+                        {({ getRootProps, getInputProps }) => (
+                          <div {...getRootProps()} className={classes.dropzone}>
+                            <input {...getInputProps()} />
+                            <PublishIcon className={classes.iconLeft} />
+                            Drop or click to upload poster file
+                          </div>
+                        )}
+                      </Dropzone>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={6} md={2}>
-                      <TextField
-                        name='runtime'
-                        placeholder='ie. 2h 35m'
-                        label='Runtime'
-                      />
-                    </Grid>
-                    <Grid item xs={6} md={1}>
-                      <Select
-                        label='Rating'
-                        name='rating'
-                        options={['G', 'PG', 'PG-13', 'R', 'NC-17']}
-                      />
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item md={2}>
-                      <DatePicker 
-                        label='Start Date'
-                        name='start_date'
-                        onChange={(date) => {
-                          setFieldValue('start_date', date);
-                          setFieldValue('showtimes', enumerateShowtimeFields({
-                            start_date: values.start_date,
-                            end_date: date,
-                            showtimes: values.showtimes,
-                          }));
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={2}>
-                      <DatePicker 
-                        label='End Date'
-                        name='end_date'
-                        onChange={(date) => {
-                          setFieldValue('end_date', date);
-                          setFieldValue('showtimes', enumerateShowtimeFields({
-                            start_date: values.start_date,
-                            end_date: date,
-                            showtimes: values.showtimes,
-                          }));
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                  <div className='mb-5'>
+                  <div className={classes.formGroup}>
                     <h3 style={{ marginTop: '16px', marginBottom: '16px' }}>Showtimes</h3>
                     {isEmpty(values.showtimes) ? (
                       <div>
@@ -360,22 +382,23 @@ class Movies extends React.Component {
                     <FieldArray
                       name='showtimes' 
                       render={() => values.showtimes.map((showtime, i) => (
-                        <div key={showtime[0]} className='form-group'>
-                          <label htmlFor={`showtimes.${i}.1`}>
-                            {moment(values.showtimes[i][0]).format('dddd MM/DD')}
-                          </label>
-                          <Field
-                            className='form-control'
+                        <div key={showtime[0]} className={classes.formGroup}>
+                          <TextField
                             name={`showtimes.${i}.1`}
-                            placeholder=''
+                            label={moment(values.showtimes[i][0]).format('dddd MM/DD')}
                           />
                         </div>
                       )
                     )} />
                   </div>
-                  <button type='submit' className='btn btn-primary px-5' value='submit'>
+                  <Button 
+                    //className={classes.publish}
+                    color='primary'
+                    variant='contained'
+                    type='submit'
+                  >
                     Publish
-                  </button>
+                  </Button>
                 </Form>
               );
             }}
@@ -386,4 +409,4 @@ class Movies extends React.Component {
   }
 }
 
-export default Movies; //withStyles(styles)(Movies);
+export default withStyles(styles)(Movies);

@@ -1,23 +1,35 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
 
-class AdminPage extends React.Component {
-  render() {
-    return (
-      <div style={{
-        'backgroundColor': 'whitesmoke',
-        'boxSizing': 'border-box',
-        'minHeight': '100vh',
-        'padding': '1em'
-      }}>
-        <div className='page-title'>
-          <h2>{this.props.title}</h2>
-        </div>
-        <div className='content'>
-          {this.props.children}
-        </div>
-      </div>
-    );
+const useStyles = makeStyles((theme) => ({
+  page: {
+    backgroundColor: theme.palette.light,
+    boxSizing: 'border-box',
+    minHeight: '100vh',
+    padding: theme.spacing(4)
+  },
+  content: {
+    maxWidth: 800 + theme.spacing(4),
   }
+}));
+
+function AdminPage({ title, children }) {
+  const classes = useStyles();
+
+  return (
+    <div className={classes.page}>
+      <h2>{title}</h2>
+      <div className={classes.content}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+AdminPage.PropTypes = {
+  title: PropTypes.string.isRequired,
+  children: PropTypes.any,
 }
 
 export default AdminPage;

@@ -8,6 +8,9 @@ const useStyles = makeStyles((theme) => ({
   fieldGroup: {
     marginBottom: theme.spacing(2),
   },
+  root: {
+    width: '100%',
+  },
 }));
 
 const CustomTextField = (props) => (
@@ -21,6 +24,7 @@ function FormikTextField(props) {
     <div className={classes.fieldGroup}>
       <Field
         as={CustomTextField}
+        classes={{ root: classes.root }}
         name={name}
         {...rest}
       />
