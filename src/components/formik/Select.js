@@ -1,24 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { FormControl, Select, MenuItem } from '@material-ui/core';
 import { Field } from 'formik';
-
-const useStyles = makeStyles((theme) => ({
-  fieldGroup: {
-    marginBottom: theme.spacing(2),
-  },
-}));
+import FormGroup from './blocks/FormGroup';
+import Label from './blocks/Label';
 
 function FormikSelect(props) {
-  const classes = useStyles();
   const { name, label, options, ...rest } = props;
-
-  const inputLabel = React.useRef(null);
-  const [labelWidth, setLabelWidth] = React.useState(0);
-  React.useEffect(() => {
-    setLabelWidth(inputLabel.current.offsetWidth);
-  }, []);
 
   const formattedOptions = options
     .map((option) => typeof option === 'string'
@@ -27,16 +15,15 @@ function FormikSelect(props) {
     );
 
   return (
-    <div className={classes.fieldGroup}>
+    <FormGroup>
       <Field name={name}>
         {({ field: { value }, form: { handleChange }}) => (
           <FormControl variant='outlined'>
-            <InputLabel ref={inputLabel} id={`${name}-label`}>
+            <Label id={`${name}-label`}>
               {label}
-            </InputLabel>
+            </Label>
             <Select
-              labelId={`${name}-label`}
-              labelWidth={labelWidth}
+              id={`${name}-label`}
               name={name}
               onChange={handleChange}
               value={value}
@@ -49,7 +36,7 @@ function FormikSelect(props) {
           </FormControl>
         )}
       </Field>
-    </div>
+    </FormGroup>
   );
 }
 

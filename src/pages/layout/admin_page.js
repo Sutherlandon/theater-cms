@@ -27,7 +27,7 @@ function AdminPage({ title, children }) {
   );
 }
 
-AdminPage.PropTypes = {
+AdminPage.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.any,
 }

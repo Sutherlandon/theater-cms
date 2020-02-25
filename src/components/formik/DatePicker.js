@@ -1,24 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import DatePicker from 'react-datepicker';
-import { TextField } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { Field } from 'formik';
 
-const useStyles = makeStyles((theme) => ({
-  fieldGroup: {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
+import TextField from './TextField';
+import FormGroup from './blocks/FormGroup';
 
 function FormikDatePicker(props) {
-  const classes = useStyles();
   const { label, name, onChange, ...rest } = props;
 
   return (
-    <div className={classes.fieldGroup}>
+    <FormGroup>
       <Field name={name}>
         {({ field: { value }, form: { setFieldValue }}) => {
           const defaultOnChange = (date) => setFieldValue(name, date);
@@ -28,7 +20,7 @@ function FormikDatePicker(props) {
               autocomplete='off'
               name={name}
               dateFormat='MM/DD/YYYY'
-              selected={moment(value)}
+              selected={value}
               onChange={onChange || defaultOnChange}
               customInput={ 
                 <TextField label={label} variant='outlined' {...rest} />
@@ -37,7 +29,7 @@ function FormikDatePicker(props) {
           );
         }}
       </Field>
-    </div>
+    </FormGroup>
   );
 }
 

@@ -4,10 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field } from 'formik';
 
+import FormGroup from './blocks/FormGroup';
+import Label from './blocks/Label';
+
 const useStyles = makeStyles((theme) => ({
-  fieldGroup: {
-    marginBottom: theme.spacing(2),
-  },
   root: {
     width: '100%',
   },
@@ -19,16 +19,18 @@ const CustomTextField = (props) => (
 
 function FormikTextField(props) {
   const classes = useStyles();
-  const { name, ...rest } = props;
+  const { label, name, ...rest } = props;
+
   return (
-    <div className={classes.fieldGroup}>
+    <FormGroup>
+      <Label>{label}</Label>
       <Field
         as={CustomTextField}
         classes={{ root: classes.root }}
         name={name}
         {...rest}
       />
-    </div>
+    </FormGroup>
   );
 }
 

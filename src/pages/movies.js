@@ -9,7 +9,7 @@ import { Grid, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
-import { Formik, Form, Field, FieldArray } from 'formik';
+import { Formik, Form, FieldArray } from 'formik';
 
 import config from '../api/config';
 import AdminPage from './layout/admin_page';
@@ -17,6 +17,7 @@ import MovieAPI from '../api/movie_api';
 import TextField from '../components/formik/TextField';
 import Select from '../components/formik/Select';
 import DatePicker from '../components/formik/DatePicker';
+import FormGroup from '../components/formik/blocks/FormGroup';
 
 /**
  * showtimes format
@@ -99,9 +100,6 @@ const styles = (theme) => ({
     justifyContent: 'center',
     padding: '16px 32px',
     width: '100%',
-  },
-  formGroup: {
-    marginBottom: theme.spacing(2),
   },
   // publish: {
   //   backgrounColor: theme.palette.primary,
@@ -229,6 +227,7 @@ class Movies extends React.Component {
   render() {
     const { classes } = this.props;
     let movie = this.state.selected_movie.value;
+    console.log(this.state.selected_movie);
 
     if (!movie) {
       return (
@@ -372,7 +371,7 @@ class Movies extends React.Component {
                       </Dropzone>
                     </Grid>
                   </Grid>
-                  <div className={classes.formGroup}>
+                  <FormGroup>
                     <h3 style={{ marginTop: '16px', marginBottom: '16px' }}>Showtimes</h3>
                     {isEmpty(values.showtimes) ? (
                       <div>
@@ -382,15 +381,14 @@ class Movies extends React.Component {
                     <FieldArray
                       name='showtimes' 
                       render={() => values.showtimes.map((showtime, i) => (
-                        <div key={showtime[0]} className={classes.formGroup}>
-                          <TextField
-                            name={`showtimes.${i}.1`}
-                            label={moment(values.showtimes[i][0]).format('dddd MM/DD')}
-                          />
-                        </div>
+                        <TextField
+                          key={showtime[0]}
+                          name={`showtimes.${i}.1`}
+                          label={moment(values.showtimes[i][0]).format('dddd MM/DD')}
+                        />
                       )
                     )} />
-                  </div>
+                  </FormGroup>
                   <Button 
                     //className={classes.publish}
                     color='primary'
