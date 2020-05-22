@@ -92,7 +92,7 @@ function MovieCard(props) {
     <Paper className={classes.movieCard}>
       <img 
         className={classes.posterImg}
-        src={`${config.api_path}/uploads/${poster}`}
+        src={`${config.api_path}/public/${poster}`}
         alt={title}
       />
       <div className={classes.info}>

@@ -6,6 +6,15 @@ import { Field } from 'formik';
 import TextField from './TextField';
 import FormGroup from './blocks/FormGroup';
 
+// this to get rid of the ref on function component error
+class CustomTextField extends React.Component {
+  render() {
+    return (
+      <TextField {...this.props} />
+    );
+  }
+}
+
 function FormikDatePicker(props) {
   const { label, name, onChange, ...rest } = props;
 
@@ -23,7 +32,7 @@ function FormikDatePicker(props) {
               selected={value}
               onChange={onChange || defaultOnChange}
               customInput={ 
-                <TextField label={label} variant='outlined' {...rest} />
+                <CustomTextField label={label} variant='outlined' {...rest} />
               }
             />
           );

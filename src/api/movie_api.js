@@ -14,6 +14,9 @@ class MovieAPI {
       method: 'post',
       url: `${config.api_path}/movies`,
       data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     });
   }
 
@@ -22,6 +25,9 @@ class MovieAPI {
       method: 'put',
       url: `${config.api_path}/movies`,
       data,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
     });
   }
 

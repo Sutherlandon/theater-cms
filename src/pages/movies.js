@@ -1,11 +1,10 @@
 import React from 'react';
-import axios from 'axios';
 import moment from 'moment';
 import isEmpty from 'lodash.isempty';
 import * as yup from 'yup';
 import ReactSelect from 'react-select';
 import Dropzone from 'react-dropzone';
-import { Grid, Button } from '@material-ui/core';
+import { Grid, Button, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
@@ -107,15 +106,26 @@ const styles = (theme) => ({
   iconLeft: {
     marginRight: theme.spacing(),
   },
+  posterContainer: {
+    width: 'fit-content',
+  },
+  posterImg: {
+    borderRadius: '4px',
+    display: 'block',
+    height: '300px',
+  },
 });
 
 const movieSchema = yup.object({
-  title: yup.string().required(),
+  end_date: yup.string().required(),
+  // poster: yup.object({
+  //   name: yup.string().required(),
+  // }).label('Poster'),
   rating: yup.string().required(),
   runtime: yup.string().required(),
-  start_date: yup.string().required(),
-  end_date: yup.string().required(),
   showtimes: yup.array(),
+  start_date: yup.string().required(),
+  title: yup.string().required(),
 });
 
 // showtimes format
@@ -172,6 +182,11 @@ class Movies extends React.Component {
     console.log('Updated', this.state);
   }
 
+  componentWillUnmount() {
+    // clean up preview memory
+    URL.revokeObjectURL(this.state.posterPreview);
+  }
+
   handleNewMovie = () => {
     this.setState({
       selected_movie: blank_movie,
@@ -180,20 +195,35 @@ class Movies extends React.Component {
   }
 
   handleSubmit = (values, formikBag) => {
-    console.log('data sent', values);
+    let { movies } = this.state;
+
+    // assemble the multipart/form-data to send
+    const { poster, ...rest } = values;
+    const data = new FormData();
+    data.append('poster', poster);
+    data.append('metaData', JSON.stringify(rest));
+
+    console.log('data sent', data);
 
     if (values._id) {
-      return MovieAPI.update(values)
+      return MovieAPI.update(data)
         .then(
           (response) => {
-            console.log(response);
-            const movies = response.data;
-            this.setState({
-              movies,
-              selected_movie: movies[0]
-            })
+            console.log('updated movie', response.data);
+            const updated_movie = response.data;
+
+            // filter out the movie that was updated
+            // replace it with the updated version
+            movies = movies
+              .filter(movie => movie._id !== updated_movie._id)
+              .append(updated_movie)
+
+            this.setState({ movies, selected_movie: updated_movie })
 
             formikBag.setSubmitting(false);
+
+            // clean up preview memory
+            URL.revokeObjectURL(this.state.posterPreview);
           },
           (error) => {
             console.log(error);
@@ -202,17 +232,20 @@ class Movies extends React.Component {
         );
     }
 
-    return MovieAPI.create(values)
+    return MovieAPI.create(data)
       .then(
         (response) => {
-          console.log(response);
-          const movies = response.data;
-          this.setState({
-            movies,
-            selected_movie: movies[0]
-          })
+          console.log('created movie', response.data);
+          const new_movie = response.data;
+
+          // add the new movie to the list
+          movies.push(new_movie);
 
           formikBag.setSubmitting(false);
+          this.setState({ movies, selected_movie: new_movie, })
+
+          // clean up preview memory
+          URL.revokeObjectURL(this.state.posterPreview);
         },
         (error) => {
           console.log(error);
@@ -226,6 +259,7 @@ class Movies extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const { posterPreview } = this.state;
     let movie = this.state.selected_movie.value;
     console.log(this.state.selected_movie);
 
@@ -241,7 +275,7 @@ class Movies extends React.Component {
       <AdminPage title='Movies'>
         {/* Movie Selector */}
         <Grid container spacing={2} className={classes.bottomLine}>
-          <Grid item>
+          <Grid item xs={6} md={4}>
             <ReactSelect
               value={this.state.selected_movie}
               onChange={(option) => this.setState({ 
@@ -282,7 +316,7 @@ class Movies extends React.Component {
 
               return (
                 <Form>
-                  <Grid container spacing={4}>
+                  <Grid container spacing={4} alignItems='stretch'>
                     <Grid item xs={12} md={6}>
                       <Grid container>
                         <Grid item xs={12}>
@@ -341,34 +375,37 @@ class Movies extends React.Component {
                       </Grid>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <Dropzone onDrop={(acceptedFiles) => {
-                        const file = acceptedFiles[0];
-                        let formData = new FormData();
-                        formData.append('file', file);
-
-                        axios.post(
-                          `${config.api_path}/uploads`,
-                          formData,
-                          { 'Content-Type': file.type }
-                        )
-                          .then(
-                            (response) => {
-                              console.log(response);
-                              setFieldValue('poster', file.name);
-                            },
-                            (error) => {
-                              console.log(error)
-                            }
-                          )
-                      }}>
-                        {({ getRootProps, getInputProps }) => (
-                          <div {...getRootProps()} className={classes.dropzone}>
-                            <input {...getInputProps()} />
-                            <PublishIcon className={classes.iconLeft} />
-                            Drop or click to upload poster file
-                          </div>
-                        )}
-                      </Dropzone>
+                      {values.poster ? (
+                        <Paper className={classes.posterContainer}>
+                          {posterPreview ? (
+                            <img 
+                              className={classes.posterImg}
+                              src={posterPreview}
+                              alt='Poster preview'
+                            />
+                          ) : (
+                            <img 
+                              className={classes.posterImg}
+                              src={`${config.api_path}/public/${values.poster}`}
+                              alt={values.poster}
+                            />
+                          )}
+                        </Paper>
+                      ) : (
+                        <Dropzone onDrop={(acceptedFiles) => {
+                          const file = acceptedFiles[0];
+                          setFieldValue('poster', file);
+                          this.setState({ posterPreview: URL.createObjectURL(file) })
+                        }}>
+                          {({ getRootProps, getInputProps }) => (
+                            <div {...getRootProps()} className={classes.dropzone}>
+                              <input {...getInputProps()} />
+                              <PublishIcon className={classes.iconLeft} />
+                              Drop or click to upload poster file
+                            </div>
+                          )}
+                        </Dropzone>
+                      )}
                     </Grid>
                   </Grid>
                   <FormGroup>
