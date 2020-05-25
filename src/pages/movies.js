@@ -8,6 +8,7 @@ import { Grid, Button, Paper } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import PublishIcon from '@material-ui/icons/Publish';
 import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 import { Formik, Form, FieldArray } from 'formik';
 
 import config from '../api/config';
@@ -109,11 +110,22 @@ const styles = (theme) => ({
   posterContainer: {
     width: 'fit-content',
   },
+  posterPaper: {
+    width: 'fit-content',
+  },
   posterImg: {
     borderRadius: '4px',
     display: 'block',
     height: '300px',
   },
+  removeButton: {
+    color: theme.palette.error.dark,
+    fontWeight: 'bold',
+  },
+  removeButtonContainer: {
+    margin: '1em auto',
+    width: 'fit-content',
+  }
 });
 
 const movieSchema = yup.object({
@@ -203,7 +215,10 @@ class Movies extends React.Component {
     data.append('poster', poster);
     data.append('metaData', JSON.stringify(rest));
 
-    console.log('data sent', data);
+    console.log('data sent');
+    for (const field of data.entries()) {
+      console.log(field[0], field[1]);
+    }
 
     if (values._id) {
       return MovieAPI.update(data)
@@ -216,11 +231,11 @@ class Movies extends React.Component {
             // replace it with the updated version
             movies = movies
               .filter(movie => movie._id !== updated_movie._id)
-              .append(updated_movie)
+              .push(updated_movie)
 
             this.setState({ movies, selected_movie: updated_movie })
 
-            formikBag.setSubmitting(false);
+            // formikBag.setSubmitting(false);
 
             // clean up preview memory
             URL.revokeObjectURL(this.state.posterPreview);
@@ -241,7 +256,7 @@ class Movies extends React.Component {
           // add the new movie to the list
           movies.push(new_movie);
 
-          formikBag.setSubmitting(false);
+          //formikBag.setSubmitting(false);
           this.setState({ movies, selected_movie: new_movie, })
 
           // clean up preview memory
@@ -376,21 +391,33 @@ class Movies extends React.Component {
                     </Grid>
                     <Grid item xs={12} md={6}>
                       {values.poster ? (
-                        <Paper className={classes.posterContainer}>
-                          {posterPreview ? (
-                            <img 
-                              className={classes.posterImg}
-                              src={posterPreview}
-                              alt='Poster preview'
-                            />
-                          ) : (
-                            <img 
-                              className={classes.posterImg}
-                              src={`${config.api_path}/public/${values.poster}`}
-                              alt={values.poster}
-                            />
-                          )}
-                        </Paper>
+                        <div className={classes.posterContainer}>
+                          <Paper className={classes.posterPaper}>
+                            {posterPreview ? (
+                              <img 
+                                className={classes.posterImg}
+                                src={posterPreview}
+                                alt='Poster preview'
+                              />
+                            ) : (
+                              <img 
+                                className={classes.posterImg}
+                                src={`${config.api_path}/public/${values.poster}`}
+                                alt={values.poster}
+                              />
+                            )}
+                          </Paper>
+                          <div className={classes.removeButtonContainer}>
+                            <Button 
+                              className={classes.removeButton}
+                              variant='text'
+                              onClick={() => setFieldValue('poster', undefined)}
+                            >
+                              <CloseIcon className={classes.iconLeft} />
+                              Remove
+                            </Button>
+                          </div>
+                        </div>
                       ) : (
                         <Dropzone onDrop={(acceptedFiles) => {
                           const file = acceptedFiles[0];
