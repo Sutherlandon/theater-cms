@@ -50,6 +50,9 @@ function enumerateShowtimeFields(values) {
   let j = 0;
   let fieldList = [];
   if (showtimes.length > 0) {
+    // initialize all dates to be moment objects
+    showtimes = showtimes.map(time => [moment(time[0]), time[1]]);
+
     // start date before current showtimes
     if (showtimes[0][0].diff(dates[0]) < 0) {
       // Move the cursor to the start of the dates
@@ -125,6 +128,9 @@ const styles = (theme) => ({
   removeButtonContainer: {
     margin: '1em auto',
     width: 'fit-content',
+  },
+  submitButtons: {
+    marginTop: '2em',
   }
 });
 
@@ -226,14 +232,20 @@ class Movies extends React.Component {
           (response) => {
             console.log('updated movie', response.data);
             const updated_movie = response.data;
+            let selected_movie;
 
-            // filter out the movie that was updated
-            // replace it with the updated version
-            movies = movies
-              .filter(movie => movie._id !== updated_movie._id)
-              .push(updated_movie)
+            // find the movie the movies list that was updated and update it's value.
+            movies.forEach((movie, i ) => {
+              if (movie.value._id === updated_movie._id) {
+                movies[i] = {
+                  label: updated_movie.title,
+                  value: updated_movie
+                }; 
+                selected_movie = movies[i];
+              }
+            });
 
-            this.setState({ movies, selected_movie: updated_movie })
+            this.setState({ movies, selected_movie })
 
             // formikBag.setSubmitting(false);
 
@@ -251,7 +263,10 @@ class Movies extends React.Component {
       .then(
         (response) => {
           console.log('created movie', response.data);
-          const new_movie = response.data;
+          const new_movie = {
+            label: response.data.title,
+            value: response.data
+          };
 
           // add the new movie to the list
           movies.push(new_movie);
@@ -274,30 +289,20 @@ class Movies extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { posterPreview } = this.state;
-    let movie = this.state.selected_movie.value;
-    console.log(this.state.selected_movie);
+    const { initialValues, movies, posterPreview, selected_movie } = this.state;
 
-    if (!movie) {
-      return (
-        <div className='row'>
-          Select a Movie to see it's info or click "New Movie" to created a one
-        </div>
-      )
-    }
-  
     return (
       <AdminPage title='Movies'>
         {/* Movie Selector */}
         <Grid container spacing={2} className={classes.bottomLine}>
           <Grid item xs={6} md={4}>
             <ReactSelect
-              value={this.state.selected_movie}
+              value={selected_movie}
               onChange={(option) => this.setState({ 
                 selected_movie: option,
                 initialValues: option.value,
               })}
-              options={this.state.movies}
+              options={movies}
               className='form-group-auto'
             />
           </Grid>
@@ -321,13 +326,13 @@ class Movies extends React.Component {
             </div>
           </div>
           <Formik
-            initialValues={this.state.initialValues}
+            initialValues={initialValues}
             validationSchema={movieSchema}
             onSubmit={this.handleSubmit}
             enableReinitialize
           >
             {({ values, errors, touched, setFieldValue}) => {
-              console.log('VALUES', values);
+              // console.log('VALUES', values);
 
               return (
                 <Form>
@@ -453,14 +458,15 @@ class Movies extends React.Component {
                       )
                     )} />
                   </FormGroup>
-                  <Button 
-                    //className={classes.publish}
-                    color='primary'
-                    variant='contained'
-                    type='submit'
-                  >
-                    Publish
-                  </Button>
+                  <div className={classes.submitButtons}>
+                    <Button 
+                      color='primary'
+                      variant='contained'
+                      type='submit'
+                    >
+                      Publish
+                    </Button>
+                  </div>
                 </Form>
               );
             }}
