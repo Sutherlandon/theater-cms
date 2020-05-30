@@ -65,7 +65,7 @@ function enumerateShowtimeFields(values) {
     if (dates[0].diff(showtimes[0][0]) < 0) {
       // handle new dates before days that already exist
       while (dates[i].diff(showtimes[0][0]) < 0) {
-        fieldList.push([dates[i], '']);
+        fieldList.push([dates[i].format('YYYY-MM-DD'), '']);
         i += 1;
       }
     }
@@ -79,11 +79,11 @@ function enumerateShowtimeFields(values) {
 
     // handle new dates after days that already exist
     while (i < dates.length) {
-      fieldList.push([dates[i], '']);
+      fieldList.push([dates[i].format('YYYY-MM-DD'), '']);
       i += 1;
     }
   } else {
-    fieldList = dates.map(date => [date, '']);
+    fieldList = dates.map(date => [date.format('YYYY-MM-DD'), '']);
   }
 
   return fieldList;
@@ -177,19 +177,22 @@ class Movies extends React.Component {
   componentDidMount() {
     MovieAPI.get()
       .then((result) => {
+        const { data } = result;
         //console.log(result);
-        const movies = result.data.map(movie => {
-          movie.start_date = moment(movie.start_date);
-          movie.end_date = moment(movie.end_date);
-          return { label: movie.title, value: movie }
-        });
-
-        if (movies.length > 0) {
-          this.setState({
-            movies,
-            selected_movie: movies[0],
-            initialValues: movies[0].value,
+        if (data) {
+          const movies = data.map(movie => {
+            movie.start_date = moment(movie.start_date);
+            movie.end_date = moment(movie.end_date);
+            return { label: movie.title, value: movie }
           });
+
+          if (movies.length > 0) {
+            this.setState({
+              movies,
+              selected_movie: movies[0],
+              initialValues: movies[0].value,
+            });
+          }
         }
       },
       error => console.log(error),
@@ -332,7 +335,7 @@ class Movies extends React.Component {
             enableReinitialize
           >
             {({ values, errors, touched, setFieldValue}) => {
-              // console.log('VALUES', values);
+              console.log('VALUES', values);
 
               return (
                 <Form>

@@ -7,12 +7,14 @@ import config from '../api/config';
 const useStyles = makeStyles((theme) => ({
   movieCard: {
     backgroundColor: theme.palette.light,
+    borderRadius: theme.spacing(),
     textAlign: 'center',
-    width: '13em',
+    width: '16em',
   },
 
   posterImg: {
-    borderRadius: '4px 4px 0 0',
+    borderTopLeftRadius: theme.spacing(),
+    borderTopRightRadius: theme.spacing(),
     display: 'block',
     width: '100%',
   },
@@ -54,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: '1fr 1fr',
     gridColumnGap: '0.5em',
     gridRowGap: '0.5em',
-    padding: '0.25em',
+    padding: '0.5em',
 
     '& span': {
       color: 'white',
