@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import config from '../api/config';
 
@@ -16,13 +16,13 @@ const useStyles = makeStyles((theme) => ({
     borderTopLeftRadius: theme.spacing(),
     borderTopRightRadius: theme.spacing(),
     display: 'block',
+    marginBottom: theme.spacing(),
     width: '100%',
   },
 
   info: {
-    display: 'flex',
-    justifyContent: 'space-around',
-    padding: '0.5em 0',
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
   },
 
   /* these colors taken from bootstrap buttons */
@@ -67,8 +67,8 @@ const useStyles = makeStyles((theme) => ({
   span: {
     borderRadius: 4,
     border: '1px solid #DDD',
-    minWidth: '5em',
-    padding: '0.25em',
+    minWidth: 80,
+    padding: theme.spacing()/2,
   },
 }));
 
@@ -97,10 +97,14 @@ function MovieCard(props) {
         src={`${config.api_path}/public/${poster}`}
         alt={title}
       />
-      <div className={classes.info}>
-        <span className={classes.span + ' ' + classes[rating]}>{rating}</span>
-        <span className={classes.span + ' ' + classes.runtime}>{runtime}</span>
-      </div>
+      <Grid container spacing={1} justify='space-around' className={classes.info}>
+        <Grid item className={classes.span + ' ' + classes[rating]}> 
+          {rating}
+        </Grid>
+        <Grid item className={classes.span + ' ' + classes.runtime}>
+          {runtime}
+        </Grid>
+      </Grid>
       <div className={classes.showtimes}>
         {showtimes.split(', ').map((time, i) => (
           <span key={i} className={classes.span}>{time}</span>
