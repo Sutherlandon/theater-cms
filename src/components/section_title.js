@@ -9,8 +9,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     color: `${theme.palette.light} !important`,
     cursor: 'pointer',
-    margin: '-1em auto 0',
+    margin: 'auto',
+    position: 'relative',
     width: 'fit-content',
+    top: -theme.spacing(),
   },
   h1: {
     padding: '0 0.5em',

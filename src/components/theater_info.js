@@ -12,7 +12,7 @@ function InfoSection(props) { return (
   )
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: '#1f1f1f',
     color: '#DDD',
@@ -20,18 +20,19 @@ const useStyles = makeStyles({
   content: {
     maxWidth: '80em',
     margin: 'auto',
+    width: '100%',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
   }
-});
+}));
 
 function TheaterInfo(props) {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <SectionTitle text="Theater Information" />
       <Grid container spacing={2} className={classes.content}>
-        <Grid item xs={12}>
-          <SectionTitle text="Theater Information" />
-        </Grid>
-        <Grid item sm={6}>
+        <Grid item xs={12} sm={6}>
           <InfoSection
             title="About Us"
             content="The Reel Deal Theater is a family owned and operated
@@ -44,7 +45,7 @@ function TheaterInfo(props) {
               theater manager for rental."
           />
         </Grid>
-        <Grid item sm={6}>
+        <Grid item xs={12} sm={6}>
           <InfoSection
             title="Theater Rental"
             content="The Reel Deal is available for conferences, private
@@ -55,7 +56,7 @@ function TheaterInfo(props) {
               To schedule, please call (505) 661-9966."
           />
         </Grid>
-        <Grid item sm={6}>
+        <Grid item xs={12} sm={6}>
           <InfoSection
             title="Job Opportunities"
             content=" Are you interested in being part of a local family run cinema
@@ -66,7 +67,7 @@ function TheaterInfo(props) {
               hours for students. Please contact Jim O'Donnell at (505) 661-9966."
           />
         </Grid>
-        <Grid item sm={6}>
+        <Grid item xs={12} sm={6}>
           <ContactCard
             title="Screen Advertising"
             desc= "To inquire about rates and formatting of Reel Deal Screen Advertising, contact:"

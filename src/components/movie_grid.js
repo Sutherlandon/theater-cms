@@ -12,20 +12,25 @@ import MovieAPI from '../api/movie_api';
 import { Grid } from '@material-ui/core';
 
 const styles = (theme) => ({
+  container: {
+    marginBottom: theme.spacing(3),
+  },
   deckSlideIndicator: {
+    color: theme.palette.light,
     display: 'none',
     opacity: 1,
-    maxHeight: '1em',
-    transition: 'opacity 1s, max-height 1s',
+    maxHeight: 40,
+    transition: 'opacity 1s, max-height 1s, padding 1s',
 
     [theme.breakpoints.down('sm')]: {
-      color: 'fadeout(@primary-light, 20%)',
+      color: theme.palette.light,
       display: 'block',
-      margin: '-1em auto 2em',
+      padding: theme.spacing(2),
       textAlign: 'center',
 
       '&::after': {
-        border: 'solid fadeout(@primary-light, 20%)',
+        borderStyle: 'solid',
+        borderColor: theme.palette.light,
         borderWidth: '0 3px 3px 0',
         content: '',
         display: 'inline-block',
@@ -38,18 +43,20 @@ const styles = (theme) => ({
     '&.collapsed': {
       opacity: 0,
       maxHeight: 0,
+      padding: 0,
     },
   },
   noMovies: {
-    margin: 16,
-    marginBottom: 24,
-    color: 'white',
+    margin: theme.spacing(2),
+    marginBottom: theme.spacing(3),
+    color: theme.palette.light,
     textAlign: 'center',
     fontSize: 20,
   },
   movieDeck: {
     justifyContent: 'center',
-    padding: '0.5em 0.5em 2em',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
 
     [theme.breakpoints.down('sm')]: {
       justifyContent: 'flex-start',
@@ -61,7 +68,7 @@ const styles = (theme) => ({
 
       '&:after': {
         content: "",
-        flex: '0 0 0.5em',
+        flex: `0 0 ${theme.spacing(2)}`,
       },
     }
   },
@@ -136,7 +143,7 @@ class MovieGrid extends React.Component {
           value={current_date}
         />
         {!isEmpty(movies) ? (
-          <Fragment>
+          <div className={classes.container}>
             <Grid
               className={classes.movieDeck}
               container
@@ -156,9 +163,9 @@ class MovieGrid extends React.Component {
               ))}
             </Grid>
             <div className={classes.deckSlideIndicator + ' ' + collapsed}>
-              Slide for more
+              Slide for more >
             </div>
-          </Fragment>
+          </div>
         ) : (
           <div className={classes.noMovies}>
             There are no showings scheduled for this day
