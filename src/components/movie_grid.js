@@ -76,7 +76,7 @@ class MovieGrid extends React.Component {
     super(props);
     this.state = {
       collapsed: '',
-      current_date: moment().format('YYYY-MM-DD'),
+      current_date: "2020-05-29",//moment().format('YYYY-MM-DD'),
       movies: [],
     };
   }
